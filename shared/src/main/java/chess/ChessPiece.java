@@ -48,7 +48,18 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK){
-            return RookMovement.pieceMoves(board, myPosition);
+            RookMovement instance = new RookMovement();
+            return instance.pieceMoves(board, myPosition);
         }
+        else if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP) {
+            BishopMovement instance = new BishopMovement();
+            return instance.pieceMoves(board, myPosition);
+
+        }
+        else if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN){
+            QueenMovement instance = new QueenMovement();
+            return instance.pieceMoves(board, myPosition);
+        }
+        return null;
     }
 }
