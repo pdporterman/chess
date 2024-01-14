@@ -60,10 +60,17 @@ public class ChessPiece {
             return instance.pieceMoves(board, myPosition);
 
         }
+        else if (board.getPiece(myPosition).getPieceType() == PieceType.KNIGHT){
+            KightMovement instance = new KightMovement();
+            return instance.pieceMoves(board,myPosition);
+        }
         else if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN){
             QueenMovement instance = new QueenMovement();
             return instance.pieceMoves(board, myPosition);
         }
-        return null;
+        else {
+            KingMovement instance = new KingMovement();
+            return instance.pieceMoves(board, myPosition);
+        }
     }
 }
