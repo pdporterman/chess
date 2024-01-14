@@ -47,7 +47,11 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK){
+        if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN){
+            PawnMovement instance = new PawnMovement();
+            return instance.pieceMoves(board, myPosition);
+        }
+        else if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK){
             RookMovement instance = new RookMovement();
             return instance.pieceMoves(board, myPosition);
         }
