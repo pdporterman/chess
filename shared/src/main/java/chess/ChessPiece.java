@@ -61,7 +61,7 @@ public class ChessPiece {
 
         }
         else if (board.getPiece(myPosition).getPieceType() == PieceType.KNIGHT){
-            KightMovement instance = new KightMovement();
+            KnightMovement instance = new KnightMovement();
             return instance.pieceMoves(board,myPosition);
         }
         else if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN){

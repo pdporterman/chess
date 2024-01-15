@@ -3,7 +3,7 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class KightMovement {
+public class KnightMovement {
     Collection<ChessMove> moves;
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
