@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -38,6 +39,19 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {return type;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece piece = (ChessPiece) o;
+        return color == piece.color && type == piece.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, type);
+    }
 
     /**
      * Calculates all the positions a chess piece can move to

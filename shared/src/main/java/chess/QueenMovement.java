@@ -8,8 +8,8 @@ public class QueenMovement {
 
 
     private void getDiagonal(ChessBoard board, ChessPosition myPosition, ChessPiece current, int row, int col, int WE, int NS) {
-        int vertBorder = (NS > 0) ? 7 : 0;
-        int sideBorder = (WE > 0) ? 7 : 0;
+        int vertBorder = (NS > 0) ? 8 : 1;
+        int sideBorder = (WE > 0) ? 8 : 1;
         if (col == sideBorder){
             return;
         }
@@ -33,7 +33,7 @@ public class QueenMovement {
     }
 
     private void getRows(ChessBoard board, ChessPosition myPosition, ChessPiece current, int row, int col, int direction) {
-        int border = (direction > 0) ? 7 : 0;
+        int border = (direction > 0) ? 8 : 1;
         for (int i = row + direction; i-direction != border; i += direction) {
             ChessPosition next = new ChessPosition(i, col);
             if (board.getPiece(next) != null) {
@@ -49,7 +49,7 @@ public class QueenMovement {
     }
 
     private void getCols(ChessBoard board, ChessPosition myPosition, ChessPiece current, int row, int col, int direction) {
-        int border = (direction > 0) ? 7 : 0;
+        int border = (direction > 0) ? 8 : 1;
         for (int i = col + direction; i-direction != border; i += direction) {
             ChessPosition next = new ChessPosition(row, i);
             if (board.getPiece(next) != null) {

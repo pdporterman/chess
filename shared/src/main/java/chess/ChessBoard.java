@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Arrays;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -13,6 +15,19 @@ public class ChessBoard {
         
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Arrays.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(board);
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -20,7 +35,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        board[position.getRow()][position.getColumn()] = piece;
+        board[position.getRow() - 1][position.getColumn() - 1] = piece;
     }
 
     /**
@@ -31,7 +46,42 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return board[position.getRow()][position.getColumn()];
+        return board[position.getRow() -1][position.getColumn()-1];
+    }
+
+    public String toString(){
+        ChessPiece piece;
+        String out;
+        String fin = "";
+        for (int i = 0; i < board.length; i++){
+            out = "";
+            for (int j = 0; j < board[0].length; j++) {
+                piece = getPiece(new ChessPosition(i + 1, j + 1));
+                if (piece == null){
+                    out += "_";
+                }
+                else if (piece.getPieceType() == ChessPiece.PieceType.KNIGHT){
+                    out += (piece.getTeamColor() == ChessGame.TeamColor.WHITE)? "n":"N";
+                }
+                else if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
+                    out += (piece.getTeamColor() == ChessGame.TeamColor.WHITE)? "p":"P";
+                }
+                else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN){
+                    out += (piece.getTeamColor() == ChessGame.TeamColor.WHITE)? "q":"Q";
+                }
+                else if (piece.getPieceType() == ChessPiece.PieceType.KING){
+                    out += (piece.getTeamColor() == ChessGame.TeamColor.WHITE)? "k":"K";
+                }
+                else if (piece.getPieceType() == ChessPiece.PieceType.BISHOP){
+                    out += (piece.getTeamColor() == ChessGame.TeamColor.WHITE)? "b":"B";
+                }
+                else if (piece.getPieceType() == ChessPiece.PieceType.ROOK){
+                    out += (piece.getTeamColor() == ChessGame.TeamColor.WHITE)? "r":"R";
+                }
+            }
+            fin += out +"\n";
+        }
+        return fin;
     }
 
     /**
@@ -40,38 +90,38 @@ public class ChessBoard {
      */
     public void resetBoard() {
         board = new ChessPiece[8][8];
-        addPiece(new ChessPosition(0,0), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK));
-        addPiece(new ChessPosition(0,1), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT));
-        addPiece(new ChessPosition(0,2), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP));
-        addPiece(new ChessPosition(0,3), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.QUEEN));
-        addPiece(new ChessPosition(0,4), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KING));
-        addPiece(new ChessPosition(0,5), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP));
-        addPiece(new ChessPosition(0,6), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT));
-        addPiece(new ChessPosition(0,7), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK));
-        addPiece(new ChessPosition(1,0), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(1,1), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(1,2), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(1,3), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(1,4), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(1,5), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(1,6), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(1,7), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(7,0), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK));
-        addPiece(new ChessPosition(7,1), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT));
-        addPiece(new ChessPosition(7,2), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP));
-        addPiece(new ChessPosition(7,3), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.QUEEN));
-        addPiece(new ChessPosition(7,4), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KING));
-        addPiece(new ChessPosition(7,5), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP));
-        addPiece(new ChessPosition(7,6), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT));
-        addPiece(new ChessPosition(7,7), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK));
-        addPiece(new ChessPosition(6,0), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(6,1), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(6,2), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(6,3), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(6,4), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(6,5), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(6,6), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
-        addPiece(new ChessPosition(6,7), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(1,1), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(1,2), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT));
+        addPiece(new ChessPosition(1,3), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP));
+        addPiece(new ChessPosition(1,4), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.QUEEN));
+        addPiece(new ChessPosition(1,5), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KING));
+        addPiece(new ChessPosition(1,6), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP));
+        addPiece(new ChessPosition(1,7), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT));
+        addPiece(new ChessPosition(1,8), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(2,1), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(2,2), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(2,3), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(2,4), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(2,5), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(2,6), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(2,7), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(2,8), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(8,1), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(8,2), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT));
+        addPiece(new ChessPosition(8,3), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP));
+        addPiece(new ChessPosition(8,4), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.QUEEN));
+        addPiece(new ChessPosition(8,5), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KING));
+        addPiece(new ChessPosition(8,6), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP));
+        addPiece(new ChessPosition(8,7), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT));
+        addPiece(new ChessPosition(8,8), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(7,1), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(7,2), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(7,3), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(7,4), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(7,5), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(7,6), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(7,7), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        addPiece(new ChessPosition(7,8), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
     }
 }
 

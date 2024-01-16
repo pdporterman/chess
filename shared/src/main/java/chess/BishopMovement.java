@@ -8,8 +8,8 @@ public class BishopMovement {
 
 
     private void getDiagonal(ChessBoard board, ChessPosition myPosition, ChessPiece current, int row, int col, int WE, int NS) {
-        int vertBorder = (NS > 0) ? 7 : 0;
-        int sideBorder = (WE > 0) ? 7 : 0;
+        int vertBorder = (NS > 0) ? 8 : 1;
+        int sideBorder = (WE > 0) ? 8 : 1;
         if (col == sideBorder){
             return;
         }
