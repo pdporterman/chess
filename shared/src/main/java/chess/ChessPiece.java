@@ -10,9 +10,9 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-
     ChessGame.TeamColor color;
-    ChessPiece.PieceType type;
+    PieceType type;
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.color = pieceColor;
         this.type = type;
@@ -62,29 +62,29 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN){
-            PawnMovement instance = new PawnMovement();
+            PawnMove instance = new PawnMove();
             return instance.pieceMoves(board, myPosition);
         }
         else if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK){
-            RookMovement instance = new RookMovement();
+            RookMove instance = new RookMove();
             return instance.pieceMoves(board, myPosition);
         }
-        else if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP) {
-            BishopMovement instance = new BishopMovement();
+        else if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP){
+            BishopMove instance = new BishopMove();
             return instance.pieceMoves(board, myPosition);
-
         }
         else if (board.getPiece(myPosition).getPieceType() == PieceType.KNIGHT){
-            KnightMovement instance = new KnightMovement();
-            return instance.pieceMoves(board,myPosition);
+            KnightMove instance = new KnightMove();
+            return instance.pieceMoves(board, myPosition);
         }
         else if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN){
-            QueenMovement instance = new QueenMovement();
+            QueenMove instance = new QueenMove();
             return instance.pieceMoves(board, myPosition);
         }
-        else {
-            KingMovement instance = new KingMovement();
+        else if (board.getPiece(myPosition).getPieceType() == PieceType.KING){
+            KingMove instance = new KingMove();
             return instance.pieceMoves(board, myPosition);
         }
+        return null;
     }
 }
