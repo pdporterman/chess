@@ -49,35 +49,28 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        String out = "";
-        for (int i = 0; i < board.length; i++){
-            String line = "";
-            for (int j = 0; j < board[0].length; j++){
-                if (board[i][j] == null){
-                    line += "_";
-                }
-                else if (board[i][j].getPieceType() == ChessPiece.PieceType.PAWN){
-                    line += (board[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)? "P" : "p";
-                }
-                else if (board[i][j].getPieceType() == ChessPiece.PieceType.ROOK){
-                    line += (board[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)? "R" : "r";
-                }
-                else if (board[i][j].getPieceType() == ChessPiece.PieceType.BISHOP){
-                    line += (board[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)? "B" : "b";
-                }
-                else if (board[i][j].getPieceType() == ChessPiece.PieceType.KNIGHT){
-                    line += (board[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)? "N" : "n";
-                }
-                else if (board[i][j].getPieceType() == ChessPiece.PieceType.KING){
-                    line += (board[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)? "K" : "k";
-                }
-                else if (board[i][j].getPieceType() == ChessPiece.PieceType.QUEEN){
-                    line += (board[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)? "Q" : "q";
+        StringBuilder out = new StringBuilder();
+        for (ChessPiece[] chessPieces : board) {
+            for (ChessPiece piece : chessPieces) {
+                if (piece == null) {
+                    out.append("_ ");
+                } else if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+                    out.append((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? "P " : "p ");
+                } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
+                    out.append((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? "R " : "r ");
+                } else if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+                    out.append((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? "B " : "b ");
+                } else if (piece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+                    out.append((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? "N " : "n ");
+                } else if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+                    out.append((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? "K " : "k ");
+                } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+                    out.append((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? "Q " : "q ");
                 }
             }
-            out += line + "\n";
+            out.append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     public boolean OnBoard(int row, int col){
