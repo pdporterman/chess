@@ -6,7 +6,7 @@ import java.util.HashSet;
 public class BishopMove {
     Collection<ChessMove> moves;
 
-    public void Diagnols(ChessBoard board, ChessPosition myPosition, ChessPiece current, int row, int col,int UD, int LR){
+    public void Diagonals(ChessBoard board, ChessPosition myPosition, ChessPiece current, int row, int col, int UD, int LR){
         int i = row + UD;
         int j = col + LR;
         while(board.OnBoard(i,j)){
@@ -31,10 +31,10 @@ public class BishopMove {
         ChessPiece current = board.getPiece(myPosition);
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        Diagnols(board,myPosition,current,row,col,1,1);
-        Diagnols(board,myPosition,current,row,col,-1,1);
-        Diagnols(board,myPosition,current,row,col,1,-1);
-        Diagnols(board,myPosition,current,row,col,-1,-1);
+        Diagonals(board,myPosition,current,row,col,1,1);
+        Diagonals(board,myPosition,current,row,col,-1,1);
+        Diagonals(board,myPosition,current,row,col,1,-1);
+        Diagonals(board,myPosition,current,row,col,-1,-1);
         return moves;
     }
 }
