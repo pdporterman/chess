@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -9,16 +10,19 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    TeamColor team;
+    ChessBoard board = new ChessBoard();
 
     public ChessGame() {
-
+        this.team = TeamColor.WHITE;
+        this.board.resetBoard();
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return team;
     }
 
     /**
@@ -27,7 +31,12 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        if (team == TeamColor.WHITE) {
+            team = TeamColor.BLACK;
+        }
+        else{
+            team = TeamColor.WHITE;
+        }
     }
 
     /**
@@ -59,6 +68,19 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+    public ChessPosition getKingPosition(TeamColor teamColor){
+        for (int r = 1; r <= 8; r++) {
+            for (int c = 1; c <= 8; c++) {
+                ChessPosition pos = new ChessPosition(r,c);
+                ChessPiece temp = board.getPiece(pos);
+                if (temp != null && temp.getPieceType() == ChessPiece.PieceType.KING && temp.getTeamColor() == teamColor){
+                    return pos;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -66,7 +88,20 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition king_position = getKingPosition(teamColor);
+        for (int r = 1; r <= 8; r++){
+            for (int c = 1; c <= 8; c++){
+                ChessPosition pos = new ChessPosition(r,c);
+                ChessPiece piece = board.getPiece(pos);
+                Collection<ChessMove> moves = piece.pieceMoves(board, pos);
+                for (ChessMove move : moves){
+                    if (move.getEndPosition() == king_position){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
