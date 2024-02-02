@@ -35,7 +35,7 @@ public class ChessGame {
 
 
     public void setTeamTurn(TeamColor team) {
-        if (team == TeamColor.WHITE) {
+        if (team.equals(TeamColor.WHITE)) {
             this.team = TeamColor.BLACK;
         }
         else{
@@ -56,11 +56,14 @@ public class ChessGame {
 
     public boolean validMove(ChessMove move){
         ChessMove undo = new ChessMove(move.getEndPosition(),move.getStartPosition(),move.getPromotionPiece());
-        board.addPiece(move.getEndPosition(),board.getPiece(move.getStartPosition()));
-        board.addPiece(move.getStartPosition(), null);
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        ChessPosition start = move.getStartPosition();
+        ChessPosition end = move.getEndPosition();
+        board.addPiece(end, piece);
+        board.addPiece(start, null);
         boolean valid = isInCheck(board.getPiece(move.getEndPosition()).getTeamColor());
-        board.addPiece(move.getStartPosition(), board.getPiece(move.getStartPosition()));
-        board.addPiece(move.getEndPosition(), null);
+        board.addPiece(start, piece);
+        board.addPiece(end, null);
         return valid;
     }
 
@@ -108,7 +111,7 @@ public class ChessGame {
             for (int c = 1; c <= 8; c++) {
                 ChessPosition pos = new ChessPosition(r,c);
                 ChessPiece temp = board.getPiece(pos);
-                if (temp != null && temp.getPieceType() == ChessPiece.PieceType.KING && temp.getTeamColor() == teamColor){
+                if (temp != null && temp.getPieceType().equals(ChessPiece.PieceType.KING) && temp.getTeamColor().equals(teamColor)){
                     return pos;
                 }
             }
@@ -129,10 +132,10 @@ public class ChessGame {
             for (int c = 1; c <= 8; c++){
                 ChessPosition pos = new ChessPosition(r,c);
                 ChessPiece piece = board.getPiece(pos);
-                if (piece.getTeamColor() != teamColor){
+                if (piece != null && piece.getTeamColor() != teamColor){
                     Collection<ChessMove> moves = piece.pieceMoves(board, pos);
                     for (ChessMove move : moves){
-                        if (move.getEndPosition() == king_position){
+                        if (move.getEndPosition().equals(king_position)){
                             return true;
                         }
                     }
@@ -150,7 +153,22 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)) {
+            for (int r = 1; r <= 8; r++) {
+                for (int c = 1; c <= 8; c++) {
+                    ChessPosition pos = new ChessPosition(r,c);
+                    ChessPiece temp = board.getPiece(pos);
+                    if (temp != null && temp.getTeamColor().equals(teamColor)) {
+                        int valid = validMoves(pos).size();
+                        if (valid > 0){
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
 
@@ -162,7 +180,22 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (!isInCheck(teamColor)){
+            for (int r = 1; r <= 8; r++) {
+                for (int c = 1; c <= 8; c++) {
+                    ChessPosition pos = new ChessPosition(r,c);
+                    ChessPiece temp = board.getPiece(pos);
+                    if (temp != null && temp.getTeamColor().equals(teamColor)) {
+                        int valid = validMoves(pos).size();
+                        if (valid > 0){
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
 
