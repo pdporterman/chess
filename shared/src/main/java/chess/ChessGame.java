@@ -27,13 +27,12 @@ public class ChessGame {
         return team;
     }
 
+
     /**
      * Set's which teams turn it is
      *
      * @param team the team whose turn it is
      */
-
-
     public void setTeamTurn(TeamColor team) {
         if (team.equals(TeamColor.WHITE)) {
             this.team = TeamColor.BLACK;
@@ -55,16 +54,22 @@ public class ChessGame {
 
 
     public boolean validMove(ChessMove move){
-        ChessMove undo = new ChessMove(move.getEndPosition(),move.getStartPosition(),move.getPromotionPiece());
-        ChessPiece piece = board.getPiece(move.getStartPosition());
+        ChessPiece start_piece = board.getPiece(move.getStartPosition());
+        ChessPiece end_piece = board.getPiece(move.getEndPosition());
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
-        board.addPiece(end, piece);
-        board.addPiece(start, null);
-        boolean valid = isInCheck(board.getPiece(move.getEndPosition()).getTeamColor());
-        board.addPiece(start, piece);
-        board.addPiece(end, null);
-        return valid;
+        if (!board.OnBoard(end.getRow(),end.getColumn())){
+            return false;
+        }
+        if (end_piece == null || (start_piece.getTeamColor() != end_piece.getTeamColor())){
+            board.addPiece(end, start_piece);
+            board.addPiece(start, null);
+            boolean valid = !isInCheck(board.getPiece(move.getEndPosition()).getTeamColor());
+            board.addPiece(start, start_piece);
+            board.addPiece(end, end_piece);
+            return valid;
+        }
+        return false;
     }
 
     /**
@@ -98,11 +103,23 @@ public class ChessGame {
      */
 
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (validMove(move)){
-            board.addPiece(move.getEndPosition(),board.getPiece(move.getStartPosition()));
-            board.addPiece(move.getStartPosition(), null);
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        HashSet<ChessMove> moveSet = (HashSet<ChessMove>) piece.pieceMoves(board,move.getStartPosition());
+        boolean inMoveSet = moveSet.contains(move);
+        TeamColor color = piece.getTeamColor();
+        if (validMove(move) && inMoveSet){
+            if (move.getPromotionPiece() != null){
+                board.addPiece(move.getEndPosition(), new ChessPiece(color, move.getPromotionPiece()));
+                board.addPiece(move.getStartPosition(), null);
+            }
+            else{
+                board.addPiece(move.getEndPosition(),piece);
+                board.addPiece(move.getStartPosition(), null);
+            }
         }
-        throw new InvalidMoveException("Invalid move: " + move);
+        else{
+            throw new InvalidMoveException("Invalid move: " + move);
+        }
     }
 
 
