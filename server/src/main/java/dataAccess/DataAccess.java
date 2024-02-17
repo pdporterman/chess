@@ -1,8 +1,7 @@
 package dataAccess;
 
 
-import dataAccess.model.User;
-imp
+import model.User;
 import java.util.Collection;
 
 public interface DataAccess {

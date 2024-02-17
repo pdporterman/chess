@@ -2,7 +2,7 @@ package dataAccess;
 
 import java.util.Collection;
 
-import dataAccess.model.User;
+import model.User;
 
 public class MemoryDataAccess implements DataAccess {
 

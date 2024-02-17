@@ -1,4 +1,4 @@
-package dataAccess.model;
+package model;
 
 public class User {
     String userName;
