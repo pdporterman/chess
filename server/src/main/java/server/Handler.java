@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import org.eclipse.jetty.client.HttpResponseException;
+import service.UserService;
 import spark.*;
 import model.User;
 

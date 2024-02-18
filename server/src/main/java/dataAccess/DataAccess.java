@@ -1,7 +1,9 @@
 package dataAccess;
 
 
+import chess.ChessGame;
 import model.User;
+import model.AuthToken;
 import java.util.Collection;
 
 public interface DataAccess {
@@ -15,15 +17,15 @@ public interface DataAccess {
 
     void clearUsers() throws DataAccessException;
 
-    authToken addAuth(AuthToken auth) throws DataAccessException;
+    AuthToken addAuth(AuthToken auth) throws DataAccessException;
 
-    Game addGame(Game game) throws DataAccessException;
+    ChessGame addGame(ChessGame game) throws DataAccessException;
 
-    Game getGame(Game game) throws DataAccessException;
+    ChessGame getGame(ChessGame game) throws DataAccessException;
 
-    Collection<Game> getAllUser(Game game) throws DataAccessException;
+    Collection<ChessGame> getAllUser(ChessGame game) throws DataAccessException;
 
-    void deleteGame(Game game) throws DataAccessException;
+    void deleteGame(ChessGame game) throws DataAccessException;
 
     void clearGames() throws DataAccessException;
 
