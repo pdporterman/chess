@@ -1,9 +1,7 @@
 package service;
 
-import com.sun.net.httpserver.Authenticator;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import dataAccess.MemoryDataAccess;
 import model.AuthToken;
 import model.ResponseUser;
 import model.User;
