@@ -11,13 +11,16 @@ public class Handler {
 
     public String objectJson(Object object){
         return new Gson().toJson(object);
+    }
 
+    public User jsonUser(String body){
+        return new Gson().fromJson(body, User.class);
     }
 }
 
 class loginHandler extends Handler {
     public Object login(Request req, Response res) throws HttpResponseException {
-        User user = new Gson().fromJson(req.body(), User.class);
+        User user = jsonUser(req.body());
         Object object = userService.login(user);
         return new Gson().toJson(object);
     }
