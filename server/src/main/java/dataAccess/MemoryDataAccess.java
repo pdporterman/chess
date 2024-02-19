@@ -10,10 +10,10 @@ public class MemoryDataAccess implements DataAccess {
     ArrayList<User> users = new ArrayList<>();
 
     ArrayList<AuthToken> auths = new ArrayList<>();
-    private int nextGameID = 0;
+    private int nextGameID = 1;
 
 
-    public User addUser(User user) throws DataAccessException{
+    public User addUser(User user){
         for (User pastUser : users){
             if (Objects.equals(user.getUserName(), pastUser.getUserName())){
                 return null;
@@ -23,46 +23,68 @@ public class MemoryDataAccess implements DataAccess {
         return user;
     }
 
-    public User getUser(User user) throws DataAccessException{
+    public User getUser(User user){
         for (User pastUser : users){
             if (Objects.equals(user.getUserName(), pastUser.getUserName()) && Objects.equals(user.getPassword(), pastUser.getPassword())){
-                return user;
+                return pastUser;
             }
         }
         return null;
     }
 
-    public Collection<User> getAllUser() throws DataAccessException{
+    public Collection<User> getAllUser(){
         return users;
     }
 
-    public void deleteUser(User user) throws DataAccessException{
+    public void deleteUser(User user){
         users.remove(user);
     }
 
-    public void clearUsers() throws DataAccessException{
+    public void clearUsers(){
         users.clear();
     }
 
-    public void addAuth(AuthToken authToken) throws DataAccessException{
+    public void addAuth(AuthToken authToken){
         auths.add(authToken);
     }
 
-    public Game addGame(Game game) throws DataAccessException{
+    public boolean getAuth(AuthToken authToken){
+        return auths.contains(authToken);
+    }
+
+    public Game addGame(Game game){
+        Game newGame = new Game(nextGameID++, game.getGameName());
+        games.add(newGame);
+        return newGame;
+    }
+
+    public Game getGameID(Game game){ //get the game using the gameID
+        for (Game oldGame : games){
+            if (Objects.equals(game.getGameID(), oldGame.getGameID())){
+                return oldGame;
+            }
+        }
         return null;
     }
 
-    public Game getGame(Game game) throws DataAccessException{
+    public Game getGameName(Game game){ //get the game using the name
+        for (Game oldGame : games){
+            if (Objects.equals(game.getGameName(), oldGame.getGameName())){
+                return oldGame;
+            }
+        }
         return null;
     }
 
-    public ArrayList<Game> getAllGames(Game game) throws DataAccessException{
+    public ArrayList<Game> getAllGames(Game game){
         return games;
     }
 
-    public void deleteGame(Game game) throws DataAccessException{
+    public void deleteGame(Game game){
         games.remove(game);
     }
 
-    public void clearGames() throws DataAccessException{}
+    public void clearGames(){
+        games.clear();
+    }
 }

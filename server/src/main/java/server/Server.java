@@ -8,7 +8,8 @@ public class Server {
 
     DataAccess da = new MemoryDataAccess();
 
-    loginHandler handlerLogin = new loginHandler(da);
+    LoginHandler handlerLogin = new LoginHandler(da);
+    RegisterHandler registerHandler = new RegisterHandler(da);
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -17,7 +18,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/session",(Request req, Response res) -> handlerLogin.login(req, res));//login
-//        Spark.post("/user",);//reg
+        Spark.post("/user",(Request req, Response res)-> registerHandler.register(req, res));//reg
 //        Spark.delete("/session",);//log out
 //        Spark.get("/game",);//list game
 //        Spark.post("/game",);//create game

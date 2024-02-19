@@ -19,7 +19,9 @@ public interface DataAccess {
 
     Game addGame(Game game) throws DataAccessException;
 
-    Game getGame(Game game) throws DataAccessException;
+    Game getGameName(Game game) throws DataAccessException;
+
+    Game getGameID(Game game) throws DataAccessException;
 
     Collection<Game> getAllGames(Game game) throws DataAccessException;
 
@@ -27,4 +29,5 @@ public interface DataAccess {
 
     void clearGames() throws DataAccessException;
 
+    boolean getAuth(AuthToken auth);
 }

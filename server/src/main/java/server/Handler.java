@@ -3,10 +3,9 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import org.eclipse.jetty.client.HttpResponseException;
-import service.UserService;
+import service.*;
 import spark.*;
-import model.User;
+import model.*;
 
 public class Handler {
     DataAccess dataAccess;
@@ -26,8 +25,8 @@ public class Handler {
     }
 }
 
-class loginHandler extends Handler {
-    public loginHandler(DataAccess dataAccess) {
+class LoginHandler extends Handler {
+    public LoginHandler(DataAccess dataAccess) {
         super(dataAccess);
     }
 
@@ -38,3 +37,26 @@ class loginHandler extends Handler {
     }
 }
 
+class RegisterHandler extends Handler {
+    public RegisterHandler(DataAccess dataAccess) {
+        super(dataAccess);
+    }
+
+    public Object register(Request req, Response res) throws DataAccessException {
+        User user = jsonUser(req.body());
+        Object object = userService.register(user);
+        return new Gson().toJson(object);
+    }
+}
+
+class LogoutHandler extends Handler {
+    public LogoutHandler(DataAccess dataAccess) {
+        super(dataAccess);
+    }
+
+    public Object register(Request req, Response res) throws DataAccessException {
+        User user = jsonUser(req.body());
+        Object object = userService.register(user);
+        return new Gson().toJson(object);
+    }
+}
