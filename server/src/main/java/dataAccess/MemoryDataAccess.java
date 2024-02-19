@@ -2,16 +2,13 @@ package dataAccess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Objects;
-
-import model.User;
-import chess.ChessGame;
+import model.*;
 
 public class MemoryDataAccess implements DataAccess {
-    HashMap<Integer, ChessGame> games = new HashMap<>();
+    ArrayList<Game> games = new ArrayList<>();
     ArrayList<User> users = new ArrayList<>();
-    private int nextGameID = 1;
+    private int nextGameID = 0;
 
 
     public User addUser(User user) throws DataAccessException{
@@ -33,23 +30,41 @@ public class MemoryDataAccess implements DataAccess {
         return null;
     }
 
-    public Collection<User> getAllUser(User user) throws DataAccessException{
+    public Collection<User> getAllUser() throws DataAccessException{
         return users;
     }
 
-    public void deleteUser(User user) throws DataAccessException;
+    public void deleteUser(User user) throws DataAccessException{
+        users.remove(user);
+    }
 
-    public void clearUsers() throws DataAccessException;
+    public void clearUsers() throws DataAccessException{
+        users.clear();
+    }
 
-//    public authToken addAuth(AuthToken auth) throws DataAccessException;
+    public String addAuth(String authToken) throws DataAccessException{
+        return null;
+    }
 
-//    public Game addGame(Game game) throws DataAccessException;
-//
-//    public Game getGame(Game game) throws DataAccessException;
-//
-//    public Collection<Game> getAllGames(Game game) throws DataAccessException;
-//
-//    public void deleteGame(Game game) throws DataAccessException;
-//
-//    public void clearGames() throws DataAccessException;
+    public Game addGame(Game game) throws DataAccessException{
+        return null;
+    }
+
+    public ResponseUser addAuth(AuthToken auth) throws DataAccessException {
+        return null;
+    }
+
+    public Game getGame(Game game) throws DataAccessException{
+        return null;
+    }
+
+    public ArrayList<Game> getAllGames(Game game) throws DataAccessException{
+        return games;
+    }
+
+    public void deleteGame(Game game) throws DataAccessException{
+        games.remove(game);
+    }
+
+    public void clearGames() throws DataAccessException{}
 }
