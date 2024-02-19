@@ -8,6 +8,8 @@ import model.*;
 public class MemoryDataAccess implements DataAccess {
     ArrayList<Game> games = new ArrayList<>();
     ArrayList<User> users = new ArrayList<>();
+
+    ArrayList<AuthToken> auths = new ArrayList<>();
     private int nextGameID = 0;
 
 
@@ -42,15 +44,11 @@ public class MemoryDataAccess implements DataAccess {
         users.clear();
     }
 
-    public String addAuth(String authToken) throws DataAccessException{
-        return null;
+    public void addAuth(AuthToken authToken) throws DataAccessException{
+        auths.add(authToken);
     }
 
     public Game addGame(Game game) throws DataAccessException{
-        return null;
-    }
-
-    public ResponseUser addAuth(AuthToken auth) throws DataAccessException {
         return null;
     }
 

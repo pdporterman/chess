@@ -8,7 +8,7 @@ public class Server {
 
     DataAccess da = new MemoryDataAccess();
 
-    loginHandler handlerLogin = new loginHandler();
+    loginHandler handlerLogin = new loginHandler(da);
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);

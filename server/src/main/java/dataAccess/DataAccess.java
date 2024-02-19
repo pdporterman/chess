@@ -15,7 +15,7 @@ public interface DataAccess {
 
     void clearUsers() throws DataAccessException;
 
-    ResponseUser addAuth(AuthToken auth) throws DataAccessException;
+    void addAuth(AuthToken auth) throws DataAccessException;
 
     Game addGame(Game game) throws DataAccessException;
 
