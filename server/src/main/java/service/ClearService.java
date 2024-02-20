@@ -1,15 +1,28 @@
 package service;
 
+import dataAccess.DataAccess;
+import dataAccess.DataAccessException;
+
 public class ClearService {
 
-    void clearUsers(){
+    DataAccess dataAccess;
 
+    public ClearService(DataAccess dataAccess){
+        this.dataAccess = dataAccess;
     }
 
-    void clearGames(){}
+    void clearUsers()throws DataAccessException {
+        dataAccess.clearUsers();
+    }
 
-    void clearAuths(){}
-    void clearAll(){
+    void clearGames()throws DataAccessException{
+        dataAccess.clearGames();
+    }
+
+    void clearAuths()throws DataAccessException{
+        dataAccess.clearAuth();
+    }
+    void clearAll()throws  DataAccessException{
         clearAuths();
         clearGames();
         clearUsers();

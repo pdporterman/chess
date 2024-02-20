@@ -52,6 +52,14 @@ public class MemoryDataAccess implements DataAccess {
         return auths.contains(authToken);
     }
 
+    public void deleteAuth(AuthToken authToken){
+        auths.remove(authToken);
+    }
+
+    public void clearAuth(){
+        auths.clear();
+    }
+
     public Game addGame(Game game){
         Game newGame = new Game(nextGameID++, game.getGameName());
         games.add(newGame);

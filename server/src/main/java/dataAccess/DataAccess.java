@@ -17,6 +17,12 @@ public interface DataAccess {
 
     void addAuth(AuthToken auth) throws DataAccessException;
 
+    void deleteAuth(AuthToken authToken) throws DataAccessException;
+
+    void clearAuth() throws DataAccessException;
+
+    boolean getAuth(AuthToken auth);
+
     Game addGame(Game game) throws DataAccessException;
 
     Game getGameName(Game game) throws DataAccessException;
@@ -29,5 +35,5 @@ public interface DataAccess {
 
     void clearGames() throws DataAccessException;
 
-    boolean getAuth(AuthToken auth);
+
 }
