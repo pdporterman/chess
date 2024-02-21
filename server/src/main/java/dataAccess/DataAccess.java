@@ -2,12 +2,17 @@ package dataAccess;
 
 
 import model.*;
+import server.requests.LoginRequest;
+import server.requests.RegisterRequest;
+
 import java.util.Collection;
 
 public interface DataAccess {
     User addUser(User user) throws DataAccessException;
 
-    User getUser(User user) throws DataAccessException;
+    User getUser(LoginRequest request) throws DataAccessException;
+
+    User getUser(RegisterRequest request) throws DataAccessException;
 
     Collection<User> getAllUser() throws DataAccessException;
 

@@ -13,6 +13,17 @@ public class Server {
 
     CreateGameHandler createGameHandler = new CreateGameHandler(da);
 
+    public static void main(String[] args){
+        try{
+            int port = Integer.parseInt(args[0]);
+            Server temp = new Server();
+            temp.run(port);
+        }
+        catch (Exception exp){
+            System.err.println(exp.getMessage());
+        }
+    }
+
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import model.*;
+import server.requests.LoginRequest;
+import server.requests.RegisterRequest;
 
 public class MemoryDataAccess implements DataAccess {
     ArrayList<Game> games = new ArrayList<>();
@@ -23,9 +25,9 @@ public class MemoryDataAccess implements DataAccess {
         return user;
     }
 
-    public User getUser(User user){
+    public User getUser(LoginRequest request){
         for (User pastUser : users){
-            if (Objects.equals(user.getUserName(), pastUser.getUserName()) && Objects.equals(user.getPassword(), pastUser.getPassword())){
+            if (Objects.equals(request.getUsername(), pastUser.getUserName()) && Objects.equals(request.getPassword(), pastUser.getPassword())){
                 return pastUser;
             }
         }

@@ -5,6 +5,9 @@ import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.ResponseUser;
 import model.User;
+import server.requests.LoginRequest;
+import server.requests.RegisterRequest;
+import server.responses.LoginResponse;
 
 public class UserService {
 
@@ -14,17 +17,20 @@ public class UserService {
         this.dataAccess = dataAccess;
     }
 
-    public Object login(User user) throws DataAccessException {
-        if (dataAccess.getUser(user) != null) {
+    public Object login(LoginRequest request) throws DataAccessException {
+        User user = dataAccess.getUser(request);
+        if (user != null) {
             AuthToken auth = new AuthToken();
             dataAccess.addAuth(auth);
-            return new ResponseUser(user, auth);
+            return new LoginResponse(user, auth);
         }
-        return null;
+        throw new DataAccessException("user does not exist");
     }
 
-    public Object register(User user) throws DataAccessException {
-        if (dataAccess.getUser(user) == null) {
+    public Object register(RegisterRequest request) throws DataAccessException {
+        User prevuser = dataAccess.getUser(request);
+        if (prevuser == null) {
+            User user = new User(request.getUsername(), request.getPassword(), request.getEmail());
             dataAccess.addUser(user);
             AuthToken auth = new AuthToken();
             dataAccess.addAuth(auth);
