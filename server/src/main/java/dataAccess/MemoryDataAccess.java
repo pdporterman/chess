@@ -34,6 +34,15 @@ public class MemoryDataAccess implements DataAccess {
         return null;
     }
 
+    public User getUser(RegisterRequest request){
+        for (User pastUser : users){
+            if (Objects.equals(request.getUsername(), pastUser.getUserName()) && Objects.equals(request.getPassword(), pastUser.getPassword())){
+                return pastUser;
+            }
+        }
+        return null;
+    }
+
     public Collection<User> getAllUser(){
         return users;
     }
@@ -50,7 +59,7 @@ public class MemoryDataAccess implements DataAccess {
         auths.add(authToken);
     }
 
-    public boolean getAuth(AuthToken authToken){
+    public boolean checkAuth(AuthToken authToken){
         return auths.contains(authToken);
     }
 

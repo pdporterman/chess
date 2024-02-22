@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import server.requests.LoginRequest;
+import server.requests.LogoutRequest;
 import server.requests.RegisterRequest;
 import server.responses.LoginResponse;
+import server.responses.LogoutResponse;
 import server.responses.RegisterResponse;
 import service.*;
 import spark.*;
@@ -99,14 +101,14 @@ class LogoutHandler extends Handler {
 
     public Object logout(Request req, Response res) throws DataAccessException {
         try {
-            RegisterRequest request = new Gson().fromJson(req.body(), RegisterRequest.class);
-            Object object = userService.register(request);
+            LogoutRequest request = new Gson().fromJson(req.body(), LogoutRequest.class);
+            Object object = userService.logout(request);
             res.status(200);
             return new Gson().toJson(object);
         }
         catch (DataAccessException ex){
             res.status(getError(ex.getMessage()));
-            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+            return new Gson().toJson(new LogoutResponse(ex.getMessage()));
         }
     }
 }

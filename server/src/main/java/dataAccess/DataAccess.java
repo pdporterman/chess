@@ -26,7 +26,7 @@ public interface DataAccess {
 
     void clearAuth() throws DataAccessException;
 
-    boolean getAuth(AuthToken auth);
+    boolean checkAuth(AuthToken auth);
 
     Game addGame(Game game) throws DataAccessException;
 

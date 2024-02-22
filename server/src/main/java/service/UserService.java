@@ -6,8 +6,11 @@ import model.AuthToken;
 import model.ResponseUser;
 import model.User;
 import server.requests.LoginRequest;
+import server.requests.LogoutRequest;
 import server.requests.RegisterRequest;
 import server.responses.LoginResponse;
+import server.responses.LogoutResponse;
+import server.responses.RegisterResponse;
 
 public class UserService {
 
@@ -34,15 +37,17 @@ public class UserService {
             dataAccess.addUser(user);
             AuthToken auth = new AuthToken();
             dataAccess.addAuth(auth);
-            return new ResponseUser(user, auth);
+            return new RegisterResponse(user, auth);
         }
-        return null;
+        throw new DataAccessException("already taken");
     }
-//    public Object logout(AuthToken auth) throws DataAccessException {
-//        if (dataAccess.getAuth(auth)) {
-//            dataAccess.deleteAuth(auth);
-//            return new null;
-//        }
-//        return null;
-//    }
+
+    public Object logout(LogoutRequest request) throws DataAccessException {
+        if (dataAccess.checkAuth(request.getAuthorization())) {
+            dataAccess.deleteAuth(request.getAuthorization());
+            return new LogoutResponse();
+        }
+        throw new DataAccessException("unauthorized");
+    }
+
 }
