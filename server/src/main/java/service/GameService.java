@@ -3,6 +3,11 @@ package service;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.*;
+import server.requests.ListGamesRequest;
+import server.responses.ListGamesResponse;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class GameService {
     private final DataAccess dataAccess;
@@ -17,5 +22,12 @@ public class GameService {
             return new ResponseCreateGame(object.getGameID());
         }
         return null;
+    }
+
+    public Collection<Game> listGames(ListGamesRequest request) throws DataAccessException {
+        if (dataAccess.checkAuth(request.getAuthorization())) {
+            return dataAccess.getAllGames();
+        }
+        throw new DataAccessException("unauthorized");
     }
 }

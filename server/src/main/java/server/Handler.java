@@ -3,15 +3,19 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
+import server.requests.ListGamesRequest;
 import server.requests.LoginRequest;
 import server.requests.LogoutRequest;
 import server.requests.RegisterRequest;
+import server.responses.ListGamesResponse;
 import server.responses.LoginResponse;
 import server.responses.LogoutResponse;
 import server.responses.RegisterResponse;
 import service.*;
 import spark.*;
 import model.*;
+
+import java.util.Collection;
 
 public class Handler {
     DataAccess dataAccess;
@@ -109,6 +113,26 @@ class LogoutHandler extends Handler {
         catch (DataAccessException ex){
             res.status(getError(ex.getMessage()));
             return new Gson().toJson(new LogoutResponse(ex.getMessage()));
+        }
+    }
+}
+
+class ListGamesHandler extends Handler {
+    public ListGamesHandler(DataAccess dataAccess) {
+        super(dataAccess);
+    }
+
+    public Object listGames(Request req, Response res) throws DataAccessException {
+        try {
+            ListGamesRequest request = new Gson().fromJson(req.body(), ListGamesRequest.class);
+            Collection<Game> object = gameService.listGames(request);
+            ListGamesResponse response = new ListGamesResponse(object);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
         }
     }
 }

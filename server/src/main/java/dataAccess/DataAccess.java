@@ -34,7 +34,7 @@ public interface DataAccess {
 
     Game getGameID(Game game) throws DataAccessException;
 
-    Collection<Game> getAllGames(Game game) throws DataAccessException;
+    Collection<Game> getAllGames() throws DataAccessException;
 
     void deleteGame(Game game) throws DataAccessException;
 

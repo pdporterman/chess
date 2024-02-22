@@ -95,7 +95,7 @@ public class MemoryDataAccess implements DataAccess {
         return null;
     }
 
-    public ArrayList<Game> getAllGames(Game game){
+    public ArrayList<Game> getAllGames(){
         return games;
     }
 
