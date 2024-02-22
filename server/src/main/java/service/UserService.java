@@ -3,14 +3,13 @@ package service;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.AuthToken;
-import model.ResponseUser;
 import model.User;
-import server.requests.LoginRequest;
-import server.requests.LogoutRequest;
-import server.requests.RegisterRequest;
-import server.responses.LoginResponse;
-import server.responses.LogoutResponse;
-import server.responses.RegisterResponse;
+import server.handlers.requests.LoginRequest;
+import server.handlers.requests.LogoutRequest;
+import server.handlers.requests.RegisterRequest;
+import server.handlers.responses.LoginResponse;
+import server.handlers.responses.LogoutResponse;
+import server.handlers.responses.RegisterResponse;
 
 public class UserService {
 

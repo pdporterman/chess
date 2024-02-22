@@ -3,8 +3,13 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import server.requests.*;
-import server.responses.*;
+import server.handlers.requests.*;
+import server.handlers.responses.ListGamesResponse;
+import server.handlers.responses.LoginResponse;
+import server.handlers.responses.LogoutResponse;
+import server.handlers.responses.RegisterResponse;
+import server.handlers.responses.*;
+import server.handlers.responses.*;
 import service.*;
 import spark.*;
 import model.*;
@@ -16,10 +21,13 @@ public class Handler {
     UserService userService;
     GameService gameService;
 
+    ClearService clearService;
+
     public Handler(DataAccess dataAccess){
         this.dataAccess = dataAccess;
         this.userService = new UserService(dataAccess);
         this.gameService = new GameService(dataAccess);
+        this.clearService = new ClearService(dataAccess);
     }
 
     public int getError(String mess){
@@ -96,7 +104,7 @@ class LogoutHandler extends Handler {
 
     public Object logout(Request req, Response res) throws DataAccessException {
         try {
-            LogoutRequest request = new Gson().fromJson(req.body(), LogoutRequest.class);
+            LogoutRequest request = new LogoutRequest(req.headers("authorization"));
             Object object = userService.logout(request);
             res.status(200);
             return new Gson().toJson(object);
@@ -145,4 +153,23 @@ class CreateGameHandler extends Handler {
             return new Gson().toJson(new RegisterResponse(ex.getMessage()));
         }
     }
+}
+
+class ClearHandler extends Handler {
+    public ClearHandler(DataAccess dataAccess) {
+        super(dataAccess);
+    }
+
+//    public Object clear(Request req, Response res) throws DataAccessException {
+//        try {
+//            ClearRequest request = new Gson().fromJson(req.body(), ClearRequest.class);
+//            Object object = clearService.clearAll(request);
+//            res.status(200);
+//            return new Gson().toJson(object);
+//        }
+//        catch (DataAccessException ex){
+//            res.status(getError(ex.getMessage()));
+//            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+//        }
+//    }
 }

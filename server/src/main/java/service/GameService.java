@@ -3,12 +3,10 @@ package service;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.*;
-import server.requests.CreateGameRequest;
-import server.requests.ListGamesRequest;
-import server.responses.CreateGameResponse;
-import server.responses.ListGamesResponse;
+import server.handlers.requests.CreateGameRequest;
+import server.handlers.requests.ListGamesRequest;
+import server.handlers.responses.CreateGameResponse;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class GameService {

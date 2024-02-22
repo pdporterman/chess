@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import model.*;
-import server.requests.CreateGameRequest;
-import server.requests.LoginRequest;
-import server.requests.RegisterRequest;
+import server.handlers.requests.CreateGameRequest;
+import server.handlers.requests.LoginRequest;
+import server.handlers.requests.RegisterRequest;
 
 public class MemoryDataAccess implements DataAccess {
     ArrayList<Game> games = new ArrayList<>();

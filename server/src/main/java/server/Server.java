@@ -1,22 +1,32 @@
 package server;
 
+import com.google.gson.Gson;
 import dataAccess.DataAccess;
+import dataAccess.DataAccessException;
 import dataAccess.MemoryDataAccess;
+import model.Game;
+import server.handlers.requests.*;
+import server.handlers.responses.*;
+import service.ClearService;
+import service.GameService;
+import service.UserService;
 import spark.*;
+
+import java.util.Collection;
 
 public class Server {
 
-    DataAccess da = new MemoryDataAccess();
+    DataAccess da;
+    UserService userService;
+    GameService gameService;
+    ClearService clearService;
 
-    LoginHandler handlerLogin = new LoginHandler(da);
-    RegisterHandler registerHandler = new RegisterHandler(da);
-
-    CreateGameHandler createGameHandler = new CreateGameHandler(da);
-
-    LogoutHandler logoutHandler = new LogoutHandler(da);
-
-    ListGamesHandler listGamesHandler = new ListGamesHandler(da);
-
+    public Server(){
+        this.da = new MemoryDataAccess();
+        this.userService = new UserService(da);
+        this.gameService = new GameService(da);
+        this.clearService = new ClearService(da);
+    }
     public static void main(String[] args){
         try{
             int port = Integer.parseInt(args[0]);
@@ -34,17 +44,116 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
-        Spark.post("/session",(Request req, Response res) -> handlerLogin.login(req, res));//login
-        Spark.post("/user",(Request req, Response res)-> registerHandler.register(req, res));//reg
-        Spark.delete("/session",(Request req, Response res)-> logoutHandler.logout(req, res));//log out
-        Spark.get("/game",(Request req, Response res)-> listGamesHandler.listGames(req, res));//list game
-        Spark.post("/game",(Request req, Response res)-> createGameHandler.createGame(req, res));//create game
+        Spark.post("/session",this::login);//login
+        Spark.post("/user",this::register);//reg
+        Spark.delete("/session", this::logout);//log out
+        Spark.get("/game",this::listGames);//list game
+        Spark.post("/game",this::createGame);//create game
 //        Spark.put("/game",);//join game
 //        Spark.delete("/db",);//clear
 
         Spark.awaitInitialization();
         return Spark.port();
     }
+
+    private int getError(String mess){
+        if (mess.contains("does not exist")){
+            return 401;
+        }
+        else if (mess.contains("unauthorized")){
+            return 401;
+        }
+        else if (mess.contains("already taken")){
+            return 403;
+        }
+        else if (mess.contains("bad request")){
+            return 400;
+        }
+        else {
+            return 500;
+        }
+    }
+
+    private Object login(Request req, Response res) throws DataAccessException {
+        try {
+            LoginRequest request = new Gson().fromJson(req.body(), LoginRequest.class);
+            Object object = userService.login(request);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new LoginResponse(ex.getMessage()));
+        }
+    }
+
+    private Object logout(Request req, Response res) throws DataAccessException {
+        try {
+            LogoutRequest request = new LogoutRequest(req.headers("authorization"));
+            Object object = userService.logout(request);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new LogoutResponse(ex.getMessage()));
+        }
+    }
+
+    private Object register(Request req, Response res) throws DataAccessException {
+        try {
+            RegisterRequest request = new Gson().fromJson(req.body(), RegisterRequest.class);
+            Object object = userService.register(request);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+        }
+    }
+
+    private Object listGames(Request req, Response res) throws DataAccessException {
+        try {
+            ListGamesRequest request = new ListGamesRequest(req.headers("authorization"));
+            Collection<Game> object = gameService.listGames(request);
+            ListGamesResponse response = new ListGamesResponse(object);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new ListGamesResponse(ex.getMessage()));
+        }
+    }
+
+    private Object createGame(Request req, Response res) throws DataAccessException {
+        try {
+            CreateGameRequest request = new Gson().fromJson(req.body(), CreateGameRequest.class);
+            Object object = gameService.createGame(request);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+        }
+    }
+
+    private Object clear(Request req, Response res) throws DataAccessException {
+        try {
+            Object object = clearService.clearAll();
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+        }
+    }
+
+
+
 
     public void stop() {
         Spark.stop();

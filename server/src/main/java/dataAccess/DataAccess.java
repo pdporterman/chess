@@ -2,9 +2,9 @@ package dataAccess;
 
 
 import model.*;
-import server.requests.CreateGameRequest;
-import server.requests.LoginRequest;
-import server.requests.RegisterRequest;
+import server.handlers.requests.CreateGameRequest;
+import server.handlers.requests.LoginRequest;
+import server.handlers.requests.RegisterRequest;
 
 import java.util.Collection;
 

@@ -2,6 +2,7 @@ package service;
 
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
+import server.handlers.responses.ClearResponse;
 
 public class ClearService {
 
@@ -22,9 +23,13 @@ public class ClearService {
     void clearAuths()throws DataAccessException{
         dataAccess.clearAuth();
     }
-    void clearAll()throws  DataAccessException{
-        clearAuths();
-        clearGames();
-        clearUsers();
+    public ClearResponse clearAll() throws  DataAccessException{
+        if (!dataAccess.getAllGames().isEmpty()) {
+            clearAuths();
+            clearGames();
+            clearUsers();
+            return new ClearResponse();
+        }
+        throw new DataAccessException("data already clear");
     }
 }
