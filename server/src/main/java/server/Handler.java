@@ -3,14 +3,8 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import server.requests.ListGamesRequest;
-import server.requests.LoginRequest;
-import server.requests.LogoutRequest;
-import server.requests.RegisterRequest;
-import server.responses.ListGamesResponse;
-import server.responses.LoginResponse;
-import server.responses.LogoutResponse;
-import server.responses.RegisterResponse;
+import server.requests.*;
+import server.responses.*;
 import service.*;
 import spark.*;
 import model.*;
@@ -57,7 +51,6 @@ public class Handler {
     public Game jsonGame(String body){return new Gson().fromJson(body, Game.class);}
 }
 
-
 class LoginHandler extends Handler {
     public LoginHandler(DataAccess dataAccess) {
         super(dataAccess);
@@ -76,7 +69,6 @@ class LoginHandler extends Handler {
         }
     }
 }
-
 
 class RegisterHandler extends Handler {
     public RegisterHandler(DataAccess dataAccess) {
@@ -97,7 +89,6 @@ class RegisterHandler extends Handler {
     }
 }
 
-
 class LogoutHandler extends Handler {
     public LogoutHandler(DataAccess dataAccess) {
         super(dataAccess);
@@ -115,7 +106,7 @@ class LogoutHandler extends Handler {
             return new Gson().toJson(new LogoutResponse(ex.getMessage()));
         }
     }
-}
+} // how do you get the HTTP head to access the auth token
 
 class ListGamesHandler extends Handler {
     public ListGamesHandler(DataAccess dataAccess) {
@@ -132,7 +123,7 @@ class ListGamesHandler extends Handler {
         }
         catch (DataAccessException ex){
             res.status(getError(ex.getMessage()));
-            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+            return new Gson().toJson(new ListGamesResponse(ex.getMessage()));
         }
     }
 }
@@ -143,8 +134,15 @@ class CreateGameHandler extends Handler {
     }
 
     public Object createGame(Request req, Response res) throws DataAccessException {
-        Game game = jsonGame(req.body());
-        Object object = gameService.createGame(game);
-        return new Gson().toJson(object);
+        try {
+            CreateGameRequest request = new Gson().fromJson(req.body(), CreateGameRequest.class);
+            Object object = gameService.createGame(request);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+        }
     }
 }

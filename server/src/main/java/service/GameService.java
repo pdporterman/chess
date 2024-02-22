@@ -3,7 +3,9 @@ package service;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.*;
+import server.requests.CreateGameRequest;
 import server.requests.ListGamesRequest;
+import server.responses.CreateGameResponse;
 import server.responses.ListGamesResponse;
 
 import java.util.ArrayList;
@@ -16,12 +18,12 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
-    public ResponseCreateGame createGame(Game game)throws DataAccessException{
-        if (dataAccess.getGameName(game) == null){
-            Game object = dataAccess.addGame(game);
-            return new ResponseCreateGame(object.getGameID());
+    public Object createGame(CreateGameRequest request)throws DataAccessException{
+        if (!dataAccess.checkGame(request)){
+            Game object = dataAccess.addGame(request);
+            return new CreateGameResponse(object.getGameID());
         }
-        return null;
+        throw new DataAccessException("bad request");
     }
 
     public Collection<Game> listGames(ListGamesRequest request) throws DataAccessException {

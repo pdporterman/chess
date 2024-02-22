@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import model.*;
+import server.requests.CreateGameRequest;
 import server.requests.LoginRequest;
 import server.requests.RegisterRequest;
 
@@ -71,29 +72,25 @@ public class MemoryDataAccess implements DataAccess {
         auths.clear();
     }
 
-    public Game addGame(Game game){
-        Game newGame = new Game(nextGameID++, game.getGameName());
+    public Game getGame(Game game){
+        return null;
+    }
+
+    public Game addGame(CreateGameRequest request){
+        Game newGame = new Game(nextGameID++, request.getGameName());
         games.add(newGame);
         return newGame;
     }
 
-    public Game getGameID(Game game){ //get the game using the gameID
-        for (Game oldGame : games){
-            if (Objects.equals(game.getGameID(), oldGame.getGameID())){
-                return oldGame;
+    public boolean checkGame(CreateGameRequest request) throws DataAccessException {
+        for (Game game : games){
+            if (Objects.equals(request.getGameName(), game.getGameName())){
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
-    public Game getGameName(Game game){ //get the game using the name
-        for (Game oldGame : games){
-            if (Objects.equals(game.getGameName(), oldGame.getGameName())){
-                return oldGame;
-            }
-        }
-        return null;
-    }
 
     public ArrayList<Game> getAllGames(){
         return games;

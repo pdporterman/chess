@@ -6,7 +6,7 @@ import model.User;
 public class RegisterResponse {
     String userName;
     String authToken;
-    String mess;
+    String message;
 
     public RegisterResponse(User user, AuthToken auth){
         this.userName = user.getUserName();
@@ -14,6 +14,6 @@ public class RegisterResponse {
     }
 
     public  RegisterResponse(String mess){
-        this.mess = mess;
+        this.message = mess;
     }
 }

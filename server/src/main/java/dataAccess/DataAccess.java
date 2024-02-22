@@ -2,6 +2,7 @@ package dataAccess;
 
 
 import model.*;
+import server.requests.CreateGameRequest;
 import server.requests.LoginRequest;
 import server.requests.RegisterRequest;
 
@@ -28,11 +29,11 @@ public interface DataAccess {
 
     boolean checkAuth(AuthToken auth);
 
-    Game addGame(Game game) throws DataAccessException;
+    Game addGame(CreateGameRequest request) throws DataAccessException;
 
-    Game getGameName(Game game) throws DataAccessException;
+    boolean checkGame(CreateGameRequest request) throws DataAccessException;
 
-    Game getGameID(Game game) throws DataAccessException;
+    Game getGame(Game game) throws DataAccessException;
 
     Collection<Game> getAllGames() throws DataAccessException;
 

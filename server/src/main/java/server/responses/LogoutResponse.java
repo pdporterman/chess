@@ -1,11 +1,11 @@
 package server.responses;
 
 public class LogoutResponse {
-    String mess;
+    String message;
 
     public LogoutResponse(){}
 
     public LogoutResponse(String mess){
-        this.mess = mess;
+        this.message = mess;
     }
 }
