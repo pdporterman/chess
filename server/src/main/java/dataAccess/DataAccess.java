@@ -9,37 +9,41 @@ import server.handlers.requests.RegisterRequest;
 import java.util.Collection;
 
 public interface DataAccess {
-    User addUser(User user) throws DataAccessException;
+    User addUser(User user); // user
 
-    User getUser(LoginRequest request) throws DataAccessException;
+    User getUser(LoginRequest request);
 
-    User getUser(RegisterRequest request) throws DataAccessException;
+    User getUser(RegisterRequest request);
 
-    Collection<User> getAllUser() throws DataAccessException;
+    Collection<User> getAllUser();
 
-    void deleteUser(User user) throws DataAccessException;
+    void deleteUser(User user);
 
-    void clearUsers() throws DataAccessException;
+    void clearUsers();
 
-    void addAuth(AuthToken auth) throws DataAccessException;
+    void addAuth(AuthToken auth); // auths
 
-    void deleteAuth(AuthToken authToken) throws DataAccessException;
+    void deleteAuth(String authToken);
 
-    void clearAuth() throws DataAccessException;
+    AuthToken getAuth(String authToken);
 
-    boolean checkAuth(AuthToken auth);
+    void clearAuth();
 
-    Game addGame(CreateGameRequest request) throws DataAccessException;
+    boolean checkAuth(String auth);
 
-    boolean checkGame(CreateGameRequest request) throws DataAccessException;
+    Game addGame(CreateGameRequest request); // games
 
-    Game getGame(Game game) throws DataAccessException;
+    boolean checkGame(CreateGameRequest request);
 
-    Collection<Game> getAllGames() throws DataAccessException;
+    Game getGame(Integer gameID);
 
-    void deleteGame(Game game) throws DataAccessException;
+    Collection<Game> getAllGames();
 
-    void clearGames() throws DataAccessException;
+    boolean setPlayer(String username, String color, Integer gameID);
+
+    void deleteGame(Game game);
+
+    void clearGames();
 
 
 }

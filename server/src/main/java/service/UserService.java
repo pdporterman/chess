@@ -22,7 +22,7 @@ public class UserService {
     public Object login(LoginRequest request) throws DataAccessException {
         User user = dataAccess.getUser(request);
         if (user != null) {
-            AuthToken auth = new AuthToken();
+            AuthToken auth = new AuthToken(request.getUsername());
             dataAccess.addAuth(auth);
             return new LoginResponse(user, auth);
         }
@@ -34,7 +34,7 @@ public class UserService {
         if (prevuser == null) {
             User user = new User(request.getUsername(), request.getPassword(), request.getEmail());
             dataAccess.addUser(user);
-            AuthToken auth = new AuthToken();
+            AuthToken auth = new AuthToken(request.getUsername());
             dataAccess.addAuth(auth);
             return new RegisterResponse(user, auth);
         }

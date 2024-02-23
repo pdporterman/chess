@@ -58,21 +58,40 @@ public class MemoryDataAccess implements DataAccess {
 
     public void addAuth(AuthToken authToken){
         auths.add(authToken);
+    }  //auths
+
+    public AuthToken getAuth(String authToken){
+        for (AuthToken token : auths){
+            if (Objects.equals(token.getToken(), authToken)){
+                return token;
+            }
+        }
+        return null;
     }
 
-    public boolean checkAuth(AuthToken authToken){
-        return auths.contains(authToken);
+    public boolean checkAuth(String authToken){
+        for (AuthToken token : auths){
+            if (Objects.equals(token.getToken(), authToken)){
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void deleteAuth(AuthToken authToken){
-        auths.remove(authToken);
+    public void deleteAuth(String authToken){
+        auths.removeIf(token -> Objects.equals(authToken, token.getToken()));
     }
 
     public void clearAuth(){
         auths.clear();
     }
 
-    public Game getGame(Game game){
+    public Game getGame(Integer gameID){
+        for (Game game : games){
+            if (game.getGameID() == gameID){
+                return game;
+            }
+        }
         return null;
     }
 
@@ -82,7 +101,7 @@ public class MemoryDataAccess implements DataAccess {
         return newGame;
     }
 
-    public boolean checkGame(CreateGameRequest request) throws DataAccessException {
+    public boolean checkGame(CreateGameRequest request)  {
         for (Game game : games){
             if (Objects.equals(request.getGameName(), game.getGameName())){
                 return true;
@@ -91,9 +110,24 @@ public class MemoryDataAccess implements DataAccess {
         return false;
     }
 
-
     public ArrayList<Game> getAllGames(){
         return games;
+    }
+
+    public boolean setPlayer(String username, String color, Integer gameID){
+        Game game = getGame(gameID);
+        if (Objects.equals(color, "")){
+            return true;
+        }
+        else if (Objects.equals(color, "WHITE") && Objects.equals(game.getWhiteUserName(), "")){
+            game.setWhiteUserName(username);
+            return true;
+        }
+        else if (Objects.equals(color, "BLACK") && Objects.equals(game.getBlackUserName(), "")) {
+            game.setBlackUserName(username);
+            return true;
+        }
+        return false;
     }
 
     public void deleteGame(Game game){

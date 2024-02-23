@@ -3,13 +3,13 @@ package server.handlers.requests;
 import model.AuthToken;
 
 public class ListGamesRequest {
-    AuthToken authorization;
+    String authorization;
 
     public ListGamesRequest(String auth){
-        this.authorization = new AuthToken(auth);
+        this.authorization = auth;
     }
 
-    public AuthToken getAuthorization() {
+    public String getAuthorization() {
         return authorization;
     }
 }

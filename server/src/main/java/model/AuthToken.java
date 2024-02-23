@@ -6,12 +6,15 @@ import java.util.UUID;
 public class AuthToken {
     String token;
 
-    public AuthToken(){
+    String username;
+
+    public AuthToken(String username){
+        this.username = username;
         this.token = UUID.randomUUID().toString();
     }
 
-    public AuthToken(String auth){
-        this.token = auth;
+    public String getUsername() {
+        return username;
     }
 
     public String getToken(){

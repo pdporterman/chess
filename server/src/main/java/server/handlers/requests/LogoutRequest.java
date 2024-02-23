@@ -3,13 +3,13 @@ package server.handlers.requests;
 import model.AuthToken;
 
 public class LogoutRequest {
-    AuthToken authorization;
+    String authorization;
 
     public LogoutRequest(String auth){
-        this.authorization = new AuthToken(auth);
+        this.authorization = auth;
     }
 
-    public AuthToken getAuthorization() {
+    public String getAuthorization() {
         return authorization;
     }
 }

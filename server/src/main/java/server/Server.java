@@ -49,8 +49,8 @@ public class Server {
         Spark.delete("/session", this::logout);//log out
         Spark.get("/game",this::listGames);//list game
         Spark.post("/game",this::createGame);//create game
-//        Spark.put("/game",);//join game
-//        Spark.delete("/db",);//clear
+        Spark.put("/game",this::joinGame);//join game
+        Spark.delete("/db",this::clear);//clear
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -74,7 +74,7 @@ public class Server {
         }
     }
 
-    private Object login(Request req, Response res) throws DataAccessException {
+    private Object login(Request req, Response res)  {
         try {
             LoginRequest request = new Gson().fromJson(req.body(), LoginRequest.class);
             Object object = userService.login(request);
@@ -87,7 +87,7 @@ public class Server {
         }
     }
 
-    private Object logout(Request req, Response res) throws DataAccessException {
+    private Object logout(Request req, Response res)  {
         try {
             LogoutRequest request = new LogoutRequest(req.headers("authorization"));
             Object object = userService.logout(request);
@@ -100,7 +100,7 @@ public class Server {
         }
     }
 
-    private Object register(Request req, Response res) throws DataAccessException {
+    private Object register(Request req, Response res)  {
         try {
             RegisterRequest request = new Gson().fromJson(req.body(), RegisterRequest.class);
             Object object = userService.register(request);
@@ -113,7 +113,7 @@ public class Server {
         }
     }
 
-    private Object listGames(Request req, Response res) throws DataAccessException {
+    private Object listGames(Request req, Response res)  {
         try {
             ListGamesRequest request = new ListGamesRequest(req.headers("authorization"));
             Collection<Game> object = gameService.listGames(request);
@@ -127,20 +127,35 @@ public class Server {
         }
     }
 
-    private Object createGame(Request req, Response res) throws DataAccessException {
+    private Object createGame(Request req, Response res)  {
         try {
             CreateGameRequest request = new Gson().fromJson(req.body(), CreateGameRequest.class);
+            request.setAuth(req.headers("authorization"));
             Object object = gameService.createGame(request);
             res.status(200);
             return new Gson().toJson(object);
         }
         catch (DataAccessException ex){
             res.status(getError(ex.getMessage()));
-            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+            return new Gson().toJson(new CreateGameResponse(ex.getMessage()));
         }
     }
 
-    private Object clear(Request req, Response res) throws DataAccessException {
+    private Object joinGame(Request req, Response res) {
+        try {
+            JoinGameRequest request = new Gson().fromJson(req.body(), JoinGameRequest.class);
+            request.setAuthorization(req.headers("authorization"));
+            Object object = gameService.joinGame(request);
+            res.status(200);
+            return new Gson().toJson(object);
+        }
+        catch (DataAccessException ex){
+            res.status(getError(ex.getMessage()));
+            return new Gson().toJson(new JoinGameResponse(ex.getMessage()));
+        }
+    }
+
+    private Object clear(Request req, Response res){
         try {
             Object object = clearService.clearAll();
             res.status(200);
@@ -148,11 +163,9 @@ public class Server {
         }
         catch (DataAccessException ex){
             res.status(getError(ex.getMessage()));
-            return new Gson().toJson(new RegisterResponse(ex.getMessage()));
+            return new Gson().toJson(new ClearResponse(ex.getMessage()));
         }
     }
-
-
 
 
     public void stop() {
