@@ -2,8 +2,8 @@ package model;
 
 public class Game {
     private int gameID;
-    private String whiteUsername = "";
-    private String blackUsername = "";
+    private String whiteUsername;
+    private String blackUsername;
     private String gameName;
 
     public Game(int ID, String name){

@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public Object register(RegisterRequest request) throws DataAccessException {
-        if (!Objects.equals(request.getUsername(), "") && !Objects.equals(request.getPassword(), "") && !Objects.equals(request.getEmail(), "")) {
+        if (!Objects.equals(request.getUsername(), null) && !Objects.equals(request.getPassword(), null) && !Objects.equals(request.getEmail(), null)) {
             User prevuser = dataAccess.getUser(request);
             if (prevuser == null) {
                 User user = new User(request.getUsername(), request.getPassword(), request.getEmail());
