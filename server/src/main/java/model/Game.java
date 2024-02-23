@@ -2,8 +2,8 @@ package model;
 
 public class Game {
     private int gameID;
-    private String whiteUserName = "";
-    private String blackUserName = "";
+    private String whiteUsername = "";
+    private String blackUsername = "";
     private String gameName;
 
     public Game(int ID, String name){
@@ -18,12 +18,12 @@ public class Game {
         this.gameName = name;
     }
 
-    public void setBlackUserName(String blackUserName) {
-        this.blackUserName = blackUserName;
+    public void setBlackUsername(String blackUsername) {
+        this.blackUsername = blackUsername;
     }
 
-    public void setWhiteUserName(String whiteUserName) {
-        this.whiteUserName = whiteUserName;
+    public void setWhiteUsername(String whiteUsername) {
+        this.whiteUsername = whiteUsername;
     }
 
     public int getGameID() {
@@ -34,11 +34,11 @@ public class Game {
         return gameName;
     }
 
-    public String getBlackUserName() {
-        return blackUserName;
+    public String getBlackUsername() {
+        return blackUsername;
     }
 
-    public String getWhiteUserName() {
-        return whiteUserName;
+    public String getWhiteUsername() {
+        return whiteUsername;
     }
 }

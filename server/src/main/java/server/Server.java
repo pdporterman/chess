@@ -119,7 +119,7 @@ public class Server {
             Collection<Game> object = gameService.listGames(request);
             ListGamesResponse response = new ListGamesResponse(object);
             res.status(200);
-            return new Gson().toJson(object);
+            return new Gson().toJson(response);
         }
         catch (DataAccessException ex){
             res.status(getError(ex.getMessage()));

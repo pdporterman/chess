@@ -11,6 +11,8 @@ import server.handlers.responses.LoginResponse;
 import server.handlers.responses.LogoutResponse;
 import server.handlers.responses.RegisterResponse;
 
+import java.util.Objects;
+
 public class UserService {
 
     private final DataAccess dataAccess;
@@ -21,32 +23,42 @@ public class UserService {
 
     public Object login(LoginRequest request) throws DataAccessException {
         User user = dataAccess.getUser(request);
-        if (user != null) {
-            AuthToken auth = new AuthToken(request.getUsername());
-            dataAccess.addAuth(auth);
-            return new LoginResponse(user, auth);
+        if (!Objects.equals(request.getUsername(), "") && !Objects.equals(request.getPassword(), "")) {
+            if (user != null && Objects.equals(user.getPassword(), request.getPassword())) {
+                AuthToken auth = new AuthToken(request.getUsername());
+                dataAccess.addAuth(auth);
+                return new LoginResponse(user, auth);
+            }
+            throw new DataAccessException("Error: unauthorized");
         }
-        throw new DataAccessException("user does not exist");
+        throw new DataAccessException("Error: bad requests");
+
     }
 
     public Object register(RegisterRequest request) throws DataAccessException {
-        User prevuser = dataAccess.getUser(request);
-        if (prevuser == null) {
-            User user = new User(request.getUsername(), request.getPassword(), request.getEmail());
-            dataAccess.addUser(user);
-            AuthToken auth = new AuthToken(request.getUsername());
-            dataAccess.addAuth(auth);
-            return new RegisterResponse(user, auth);
+        if (!Objects.equals(request.getUsername(), "") && !Objects.equals(request.getPassword(), "") && !Objects.equals(request.getEmail(), "")) {
+            User prevuser = dataAccess.getUser(request);
+            if (prevuser == null) {
+                User user = new User(request.getUsername(), request.getPassword(), request.getEmail());
+                dataAccess.addUser(user);
+                AuthToken auth = new AuthToken(request.getUsername());
+                dataAccess.addAuth(auth);
+                return new RegisterResponse(user, auth);
+            }
+            throw new DataAccessException("Error: already taken");
         }
-        throw new DataAccessException("already taken");
+        throw new DataAccessException("Error: bad request");
     }
 
     public Object logout(LogoutRequest request) throws DataAccessException {
-        if (dataAccess.checkAuth(request.getAuthorization())) {
-            dataAccess.deleteAuth(request.getAuthorization());
-            return new LogoutResponse();
+        if(!Objects.equals(request.getAuthorization(), "")){
+            if (dataAccess.checkAuth(request.getAuthorization())) {
+                dataAccess.deleteAuth(request.getAuthorization());
+                return new LogoutResponse();
+            }
+            throw new DataAccessException("Error: unauthorized");
         }
-        throw new DataAccessException("unauthorized");
+        throw new DataAccessException("Error: bad request");
     }
 
 }

@@ -39,7 +39,7 @@ public interface DataAccess {
 
     Collection<Game> getAllGames();
 
-    boolean setPlayer(String username, String color, Integer gameID);
+    boolean setPlayer(String username, String color, Game game);
 
     void deleteGame(Game game);
 

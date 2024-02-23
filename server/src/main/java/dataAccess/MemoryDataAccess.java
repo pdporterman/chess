@@ -110,21 +110,20 @@ public class MemoryDataAccess implements DataAccess {
         return false;
     }
 
-    public ArrayList<Game> getAllGames(){
+    public Collection<Game> getAllGames(){
         return games;
     }
 
-    public boolean setPlayer(String username, String color, Integer gameID){
-        Game game = getGame(gameID);
-        if (Objects.equals(color, "")){
+    public boolean setPlayer(String username, String color, Game game){
+         if (Objects.equals(color, "")){
             return true;
         }
-        else if (Objects.equals(color, "WHITE") && Objects.equals(game.getWhiteUserName(), "")){
-            game.setWhiteUserName(username);
+        else if (Objects.equals(color, "WHITE") && Objects.equals(game.getWhiteUsername(), "")){
+            game.setWhiteUsername(username);
             return true;
         }
-        else if (Objects.equals(color, "BLACK") && Objects.equals(game.getBlackUserName(), "")) {
-            game.setBlackUserName(username);
+        else if (Objects.equals(color, "BLACK") && Objects.equals(game.getBlackUsername(), "")) {
+            game.setBlackUsername(username);
             return true;
         }
         return false;

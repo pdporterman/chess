@@ -4,12 +4,12 @@ import model.AuthToken;
 import model.User;
 
 public class LoginResponse {
-    String userName;
+    String username;
     String authToken;
     String message;
 
     public LoginResponse(User user, AuthToken auth){
-        this.userName = user.getUserName();
+        this.username = user.getUserName();
         this.authToken = auth.getToken();
     }
 

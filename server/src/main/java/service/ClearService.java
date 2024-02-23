@@ -24,12 +24,9 @@ public class ClearService {
         dataAccess.clearAuth();
     }
     public ClearResponse clearAll() throws  DataAccessException{
-        if (!dataAccess.getAllGames().isEmpty()) {
-            clearAuths();
-            clearGames();
-            clearUsers();
-            return new ClearResponse();
-        }
-        throw new DataAccessException("data already clear");
+        clearAuths();
+        clearGames();
+        clearUsers();
+        return new ClearResponse();
     }
 }
