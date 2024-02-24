@@ -78,7 +78,7 @@ public class ServiceTests {
             User user = new User("user","pass","mail");
             da.addUser(user);
             LoginRequest request = new LoginRequest("user","pass");
-            request.setUsername(null);
+            request.username = null;
             LoginResponse response = userService.login(request);
         }
         catch (DataAccessException ex) {

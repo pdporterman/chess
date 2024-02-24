@@ -1,7 +1,7 @@
 package server.handlers.requests;
 
 public class LoginRequest {
-    String username;
+    public String username;
     String password;
 
     public LoginRequest(String username, String password){
@@ -17,7 +17,4 @@ public class LoginRequest {
         return password;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }
