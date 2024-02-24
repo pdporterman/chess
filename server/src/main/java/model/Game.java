@@ -6,12 +6,12 @@ public class Game {
     private String blackUsername;
     private String gameName;
 
-    public Game(int ID, String name){
-        this.gameID = ID;
+    public Game(int id, String name){
+        this.gameID = id;
         this.gameName = name;
     }
-    public Game(int ID){
-        this.gameID = ID;
+    public Game(Integer id){
+        this.gameID = id;
     }
 
     public Game(String name){

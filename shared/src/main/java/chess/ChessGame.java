@@ -50,19 +50,19 @@ public class ChessGame {
 
 
     public boolean validMove(ChessMove move){
-        ChessPiece start_piece = board.getPiece(move.getStartPosition());
-        ChessPiece end_piece = board.getPiece(move.getEndPosition());
+        ChessPiece startPiece = board.getPiece(move.getStartPosition());
+        ChessPiece endPiece = board.getPiece(move.getEndPosition());
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
         if (!board.onBoard(end.getRow(),end.getColumn())){
             return false;
         }
-        if (end_piece == null || (start_piece.getTeamColor() != end_piece.getTeamColor())){
-            board.addPiece(end, start_piece);
+        if (endPiece == null || (startPiece.getTeamColor() != endPiece.getTeamColor())){
+            board.addPiece(end, startPiece);
             board.addPiece(start, null);
             boolean valid = !isInCheck(board.getPiece(move.getEndPosition()).getTeamColor());
-            board.addPiece(start, start_piece);
-            board.addPiece(end, end_piece);
+            board.addPiece(start, startPiece);
+            board.addPiece(end, endPiece);
             return valid;
         }
         return false;
@@ -142,7 +142,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition king_position = getKingPosition(teamColor);
+        ChessPosition kingPosition = getKingPosition(teamColor);
         for (int r = 1; r <= 8; r++){
             for (int c = 1; c <= 8; c++){
                 ChessPosition pos = new ChessPosition(r,c);
@@ -150,7 +150,7 @@ public class ChessGame {
                 if (piece != null && piece.getTeamColor() != teamColor){
                     Collection<ChessMove> moves = piece.pieceMoves(board, pos);
                     for (ChessMove move : moves){
-                        if (move.getEndPosition().equals(king_position)){
+                        if (move.getEndPosition().equals(kingPosition)){
                             return true;
                         }
                     }

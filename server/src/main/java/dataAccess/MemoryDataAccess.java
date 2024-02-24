@@ -44,13 +44,13 @@ public class MemoryDataAccess implements DataAccess {
         return null;
     }
 
-    public Collection<User> getAllUser(){
-        return users;
-    }
+//    public Collection<User> getAllUser(){
+//        return users;
+//    }
 
-    public void deleteUser(User user){
-        users.remove(user);
-    }
+//    public void deleteUser(User user){
+//        users.remove(user);
+//    }
 
     public void clearUsers(){
         users.clear();
@@ -101,14 +101,14 @@ public class MemoryDataAccess implements DataAccess {
         return newGame;
     }
 
-    public boolean checkGame(CreateGameRequest request)  {
-        for (Game game : games){
-            if (Objects.equals(request.getGameName(), game.getGameName())){
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean checkGame(CreateGameRequest request)  {
+//        for (Game game : games){
+//            if (Objects.equals(request.getGameName(), game.getGameName())){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public Collection<Game> getAllGames(){
         return games;
@@ -129,9 +129,9 @@ public class MemoryDataAccess implements DataAccess {
         return false;
     }
 
-    public void deleteGame(Game game){
-        games.remove(game);
-    }
+//    public void deleteGame(Game game){
+//        games.remove(game);
+//    }
 
     public void clearGames(){
         games.clear();

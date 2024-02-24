@@ -15,10 +15,6 @@ public interface DataAccess {
 
     User getUser(RegisterRequest request);
 
-    Collection<User> getAllUser();
-
-    void deleteUser(User user);
-
     void clearUsers();
 
     void addAuth(AuthToken auth); // auths
@@ -33,15 +29,11 @@ public interface DataAccess {
 
     Game addGame(CreateGameRequest request); // games
 
-    boolean checkGame(CreateGameRequest request);
-
     Game getGame(Integer gameID);
 
     Collection<Game> getAllGames();
 
     boolean setPlayer(String username, String color, Game game);
-
-    void deleteGame(Game game);
 
     void clearGames();
 
