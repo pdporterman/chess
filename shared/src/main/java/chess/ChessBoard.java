@@ -78,7 +78,7 @@ public class ChessBoard {
         return out.toString();
     }
 
-    public boolean OnBoard(int row, int col){
+    public boolean onBoard(int row, int col){
         return row >= 1 && row <= 8 && col >= 1 && col <= 8;
     }
 

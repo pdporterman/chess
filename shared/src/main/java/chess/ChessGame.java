@@ -1,5 +1,7 @@
 package chess;
 
+import chess.moves.ChessMove;
+
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -52,7 +54,7 @@ public class ChessGame {
         ChessPiece end_piece = board.getPiece(move.getEndPosition());
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
-        if (!board.OnBoard(end.getRow(),end.getColumn())){
+        if (!board.onBoard(end.getRow(),end.getColumn())){
             return false;
         }
         if (end_piece == null || (start_piece.getTeamColor() != end_piece.getTeamColor())){

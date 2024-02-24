@@ -1,4 +1,7 @@
-package chess;
+package chess.moves;
+
+import chess.ChessPiece;
+import chess.ChessPosition;
 
 import java.util.Objects;
 

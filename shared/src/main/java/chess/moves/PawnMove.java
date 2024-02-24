@@ -1,4 +1,9 @@
-package chess;
+package chess.moves;
+
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,7 +35,7 @@ public class PawnMove {
             }
 
         }
-        if (board.OnBoard(row + direction, col + 1)) {
+        if (board.onBoard(row + direction, col + 1)) {
             if (board.getPiece(capr) != null && board.getPiece(capr).getTeamColor() != current.getTeamColor()) {
                 if (promotion) {
                     moves.add(new ChessMove(myPosition, capr, ChessPiece.PieceType.QUEEN));
@@ -43,7 +48,7 @@ public class PawnMove {
             }
         }
 
-        if (board.OnBoard(row + direction, col -1)) {
+        if (board.onBoard(row + direction, col -1)) {
             if (board.getPiece(capl) != null && board.getPiece(capl).getTeamColor() != current.getTeamColor()) {
                 if (promotion) {
                     moves.add(new ChessMove(myPosition, capl, ChessPiece.PieceType.QUEEN));
