@@ -116,10 +116,9 @@ public class Server {
     private Object listGames(Request req, Response res)  {
         try {
             ListGamesRequest request = new ListGamesRequest(req.headers("authorization"));
-            Collection<Game> object = gameService.listGames(request);
-            ListGamesResponse response = new ListGamesResponse(object);
+            Object object = gameService.listGames(request);
             res.status(200);
-            return new Gson().toJson(response);
+            return new Gson().toJson(object);
         }
         catch (DataAccessException ex){
             res.status(getError(ex.getMessage()));

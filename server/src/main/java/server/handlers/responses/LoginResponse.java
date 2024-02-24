@@ -16,4 +16,12 @@ public class LoginResponse {
     public  LoginResponse(String mess){
         this.message = mess;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

@@ -8,4 +8,8 @@ public class LogoutResponse {
     public LogoutResponse(String mess){
         this.message = mess;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }

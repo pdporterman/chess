@@ -8,6 +8,7 @@ import server.handlers.requests.JoinGameRequest;
 import server.handlers.requests.ListGamesRequest;
 import server.handlers.responses.CreateGameResponse;
 import server.handlers.responses.JoinGameResponse;
+import server.handlers.responses.ListGamesResponse;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
-    public Object createGame(CreateGameRequest request)throws DataAccessException{
+    public CreateGameResponse createGame(CreateGameRequest request)throws DataAccessException{
         if(!Objects.equals(request.getAuthorization(), "") && !Objects.equals(request.getGameName(), "")) {
             if (dataAccess.checkAuth(request.getAuthorization())) {
                 Game object = dataAccess.addGame(request);
@@ -30,17 +31,17 @@ public class GameService {
         throw new DataAccessException("Error: missing infromation");
     }
 
-    public Collection<Game> listGames(ListGamesRequest request) throws DataAccessException {
+    public ListGamesResponse listGames(ListGamesRequest request) throws DataAccessException {
         if (!Objects.equals(request.getAuthorization(), "")) {
             if (dataAccess.checkAuth(request.getAuthorization())) {
-                return dataAccess.getAllGames();
+                return new ListGamesResponse(dataAccess.getAllGames());
             }
             throw new DataAccessException("Error: unauthorized");
         }
         throw  new DataAccessException("Error: bad request");
     }
 
-    public Object joinGame(JoinGameRequest request) throws DataAccessException{
+    public JoinGameResponse joinGame(JoinGameRequest request) throws DataAccessException{
         if (dataAccess.checkAuth(request.getAuthorization())){
             AuthToken authToken = dataAccess.getAuth(request.getAuthorization());
             Game game = dataAccess.getGame(request.getGameID());

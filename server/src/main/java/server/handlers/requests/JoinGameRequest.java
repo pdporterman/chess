@@ -4,7 +4,7 @@ import model.AuthToken;
 
 public class JoinGameRequest {
 
-    String playerColor = "";
+    String playerColor;
     Integer gameID;
     String authorization;
 

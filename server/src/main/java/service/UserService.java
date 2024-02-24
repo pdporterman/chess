@@ -21,7 +21,7 @@ public class UserService {
         this.dataAccess = dataAccess;
     }
 
-    public Object login(LoginRequest request) throws DataAccessException {
+    public LoginResponse login(LoginRequest request) throws DataAccessException {
         User user = dataAccess.getUser(request);
         if (!Objects.equals(request.getUsername(), "") && !Objects.equals(request.getPassword(), "")) {
             if (user != null && Objects.equals(user.getPassword(), request.getPassword())) {
@@ -35,7 +35,7 @@ public class UserService {
 
     }
 
-    public Object register(RegisterRequest request) throws DataAccessException {
+    public RegisterResponse register(RegisterRequest request) throws DataAccessException {
         if (!Objects.equals(request.getUsername(), null) && !Objects.equals(request.getPassword(), null) && !Objects.equals(request.getEmail(), null)) {
             User prevuser = dataAccess.getUser(request);
             if (prevuser == null) {
@@ -50,7 +50,7 @@ public class UserService {
         throw new DataAccessException("Error: bad request");
     }
 
-    public Object logout(LogoutRequest request) throws DataAccessException {
+    public LogoutResponse logout(LogoutRequest request) throws DataAccessException {
         if(!Objects.equals(request.getAuthorization(), "")){
             if (dataAccess.checkAuth(request.getAuthorization())) {
                 dataAccess.deleteAuth(request.getAuthorization());

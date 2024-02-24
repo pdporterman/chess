@@ -13,6 +13,11 @@ public class AuthToken {
         this.token = UUID.randomUUID().toString();
     }
 
+    public AuthToken(String username, String auth){
+        this.username = username;
+        this.token = auth;
+    }
+
     public String getUsername() {
         return username;
     }
