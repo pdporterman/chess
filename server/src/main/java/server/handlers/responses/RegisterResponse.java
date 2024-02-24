@@ -24,8 +24,5 @@ public class RegisterResponse {
     public String getMessage() {
         return message;
     }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    
 }
