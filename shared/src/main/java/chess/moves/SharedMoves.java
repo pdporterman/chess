@@ -44,12 +44,10 @@ public class SharedMoves {
     }
 
     public void cols(ChessBoard board, ChessPosition myPosition, ChessPiece current, int row, int col, int direction, HashSet<ChessMove> moves){
-        int i = col + direction;
-        while(board.onBoard(row, i)){
+        for(int i = col + direction; board.onBoard(row, i); i += direction){
             ChessPosition next = new ChessPosition(row, i);
             if (board.getPiece(next) == null){
                 moves.add(new ChessMove(myPosition, next, null));
-                i += direction;
             }
             else{
                 if (board.getPiece(next).getTeamColor() != current.getTeamColor()){
