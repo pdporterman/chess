@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public class ListGamesResponse {
 
-    Collection<Game> games;
+    public Collection<Game> games;
     String message;
     public ListGamesResponse(Collection<Game> games){
         this.games = games;
@@ -16,7 +16,4 @@ public class ListGamesResponse {
         this.message = mess;
     }
 
-    public Collection<Game> getGames() {
-        return games;
-    }
 }

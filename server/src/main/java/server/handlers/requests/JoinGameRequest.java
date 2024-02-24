@@ -4,7 +4,7 @@ import model.AuthToken;
 
 public class JoinGameRequest {
 
-    String playerColor;
+    public String playerColor;
     Integer gameID;
     String authorization;
 
@@ -14,10 +14,6 @@ public class JoinGameRequest {
 
     public void setAuthorization(String authorization) {
         this.authorization = authorization;
-    }
-
-    public void setPlayerColor(String playerColor) {
-        this.playerColor = playerColor;
     }
 
     public String getAuthorization() {

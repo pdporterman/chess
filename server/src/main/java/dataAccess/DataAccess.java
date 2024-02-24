@@ -11,9 +11,7 @@ import java.util.Collection;
 public interface DataAccess {
     User addUser(User user); // user
 
-    User getUser(LoginRequest request);
-
-    User getUser(RegisterRequest request);
+    User getUser(String username, String password);
 
     void clearUsers();
 

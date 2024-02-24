@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest request) throws DataAccessException {
-        User user = dataAccess.getUser(request);
+        User user = dataAccess.getUser(request.getUsername(),request.getPassword());
         if (!Objects.equals(request.getUsername(), "") && !Objects.equals(request.getPassword(), "")) {
             if (user != null && Objects.equals(user.getPassword(), request.getPassword())) {
                 AuthToken auth = new AuthToken(request.getUsername());
@@ -37,7 +37,7 @@ public class UserService {
 
     public RegisterResponse register(RegisterRequest request) throws DataAccessException {
         if (!Objects.equals(request.getUsername(), null) && !Objects.equals(request.getPassword(), null) && !Objects.equals(request.getEmail(), null)) {
-            User prevuser = dataAccess.getUser(request);
+            User prevuser = dataAccess.getUser(request.getUsername(), request.getPassword());
             if (prevuser == null) {
                 User user = new User(request.getUsername(), request.getPassword(), request.getEmail());
                 dataAccess.addUser(user);

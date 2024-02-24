@@ -51,7 +51,7 @@ public class ServiceTests {
     public void registerFail()throws DataAccessException{
         try {
             RegisterRequest request = new RegisterRequest("user", "pass", "mail");
-            request.setUsername(null);
+            request.username = null;
             userService.register(request);
         }
         catch (DataAccessException ex){
@@ -120,7 +120,7 @@ public class ServiceTests {
         da.addGame(temp);
         ListGamesRequest request = new ListGamesRequest("auth");
         ListGamesResponse response = gameService.listGames(request);
-        Assertions.assertEquals(response.getGames().size(), 1);
+        Assertions.assertEquals(response.games.size(), 1);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class ServiceTests {
             Assertions.assertEquals(da.getAllGames().size(), 1);
             JoinGameRequest request = new JoinGameRequest(1);
             request.setAuthorization("auth");
-            request.setPlayerColor("");
+            request.playerColor = "";
             JoinGameResponse response = gameService.joinGame(request);
         }
         catch (DataAccessException ex) {

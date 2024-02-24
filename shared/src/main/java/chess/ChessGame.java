@@ -160,6 +160,22 @@ public class ChessGame {
         return false;
     }
 
+    public boolean movesCheck(TeamColor teamColor){
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row,col);
+                ChessPiece temp = board.getPiece(pos);
+                if (temp != null && temp.getTeamColor().equals(teamColor)) {
+                    int valid = validMoves(pos).size();
+                    if (valid > 0){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Determines if the given team is in checkmate
@@ -169,19 +185,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
-            for (int r = 1; r <= 8; r++) {
-                for (int c = 1; c <= 8; c++) {
-                    ChessPosition pos = new ChessPosition(r,c);
-                    ChessPiece temp = board.getPiece(pos);
-                    if (temp != null && temp.getTeamColor().equals(teamColor)) {
-                        int valid = validMoves(pos).size();
-                        if (valid > 0){
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
+            return movesCheck(teamColor);
         }
         return false;
     }
@@ -196,19 +200,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (!isInCheck(teamColor)){
-            for (int r = 1; r <= 8; r++) {
-                for (int c = 1; c <= 8; c++) {
-                    ChessPosition pos = new ChessPosition(r,c);
-                    ChessPiece temp = board.getPiece(pos);
-                    if (temp != null && temp.getTeamColor().equals(teamColor)) {
-                        int valid = validMoves(pos).size();
-                        if (valid > 0){
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
+            return movesCheck(teamColor);
         }
         return false;
     }

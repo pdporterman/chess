@@ -26,31 +26,14 @@ public class MemoryDataAccess implements DataAccess {
         return user;
     }
 
-    public User getUser(LoginRequest request){
+    public User getUser(String username, String password){
         for (User pastUser : users){
-            if (Objects.equals(request.getUsername(), pastUser.getUserName()) && Objects.equals(request.getPassword(), pastUser.getPassword())){
+            if (Objects.equals(username, pastUser.getUserName()) && Objects.equals(password, pastUser.getPassword())){
                 return pastUser;
             }
         }
         return null;
     }
-
-    public User getUser(RegisterRequest request){
-        for (User pastUser : users){
-            if (Objects.equals(request.getUsername(), pastUser.getUserName()) && Objects.equals(request.getPassword(), pastUser.getPassword())){
-                return pastUser;
-            }
-        }
-        return null;
-    }
-
-//    public Collection<User> getAllUser(){
-//        return users;
-//    }
-
-//    public void deleteUser(User user){
-//        users.remove(user);
-//    }
 
     public void clearUsers(){
         users.clear();
@@ -101,15 +84,6 @@ public class MemoryDataAccess implements DataAccess {
         return newGame;
     }
 
-//    public boolean checkGame(CreateGameRequest request)  {
-//        for (Game game : games){
-//            if (Objects.equals(request.getGameName(), game.getGameName())){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     public Collection<Game> getAllGames(){
         return games;
     }
@@ -128,10 +102,6 @@ public class MemoryDataAccess implements DataAccess {
         }
         return false;
     }
-
-//    public void deleteGame(Game game){
-//        games.remove(game);
-//    }
 
     public void clearGames(){
         games.clear();

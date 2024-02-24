@@ -1,7 +1,7 @@
 package server.handlers.requests;
 
 public class RegisterRequest {
-    String username;
+    public String username;
     String password;
     String email;
 
@@ -21,10 +21,6 @@ public class RegisterRequest {
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setUsername(String username) {
