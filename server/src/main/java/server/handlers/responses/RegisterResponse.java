@@ -24,5 +24,5 @@ public class RegisterResponse {
     public String getMessage() {
         return message;
     }
-    
+
 }
