@@ -11,7 +11,6 @@ import server.handlers.requests.RegisterRequest;
 public class MemoryDataAccess implements DataAccess {
     ArrayList<Game> games = new ArrayList<>();
     ArrayList<User> users = new ArrayList<>();
-
     ArrayList<AuthToken> auths = new ArrayList<>();
     private int nextGameID = 1;
 

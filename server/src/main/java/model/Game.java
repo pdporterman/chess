@@ -1,14 +1,18 @@
 package model;
 
+import chess.ChessGame;
+
 public class Game {
     private int gameID;
     private String whiteUsername;
     private String blackUsername;
     private String gameName;
+    private ChessGame game;
 
     public Game(int id, String name){
         this.gameID = id;
         this.gameName = name;
+        this.game = new ChessGame();
     }
     public Game(Integer id){
         this.gameID = id;
@@ -40,5 +44,13 @@ public class Game {
 
     public String getWhiteUsername() {
         return whiteUsername;
+    }
+
+    public ChessGame getGame() {
+        return game;
+    }
+
+    public void setGame(ChessGame game) {
+        this.game = game;
     }
 }
