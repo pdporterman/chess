@@ -147,7 +147,7 @@ public class MySqlDataAccess implements DataAccess{
         Game temp = new Game(0, request.getGameName());
         var json = new Gson().toJson(temp);
         int id = executeUpdate(statement, temp.getGameName(), json);
-        return new Game(id, request.getGameName(), temp.getGame());
+        return new Game(id , request.getGameName(), temp.getGame());
     }
 
     public Game getGame(Integer gameID) throws DataAccessException{
@@ -156,7 +156,6 @@ public class MySqlDataAccess implements DataAccess{
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, gameID);
                 try (var rs = ps.executeQuery()) {
-                    System.out.print(rs.getInt("gameID"));
                     if (rs.next()) {
                         return readGame(rs);
                     }
@@ -186,6 +185,7 @@ public class MySqlDataAccess implements DataAccess{
     }
 
     public boolean setPlayer(String username, String color, Game game) throws DataAccessException {
+        System.out.println(game.getGameID() + game.getGameName() + game.getBlackUsername() + game.getWhiteUsername());
         if (Objects.equals(color, null)) {
             return true;
         } else if (Objects.equals(color, "WHITE") && Objects.equals(game.getWhiteUsername(), null)) {
@@ -193,6 +193,7 @@ public class MySqlDataAccess implements DataAccess{
                 var statement = "UPDATE games Set whiteUsername=? WHERE gameID=?";
                 try (var ps = conn.prepareStatement(statement)) {
                     ps.setString(1, username);
+                    System.out.println(game.getGameID());
                     ps.setInt(2, game.getGameID());
                     ps.executeUpdate();
                     return true;
@@ -243,7 +244,7 @@ public class MySqlDataAccess implements DataAccess{
 
                 var rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-                    rs.getInt(1);
+                    return rs.getInt(1);
                 }
                 return 0;
             }
