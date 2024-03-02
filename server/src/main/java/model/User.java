@@ -26,6 +26,9 @@ public class User {
         return password;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
     @Override
     public boolean equals(Object o) {

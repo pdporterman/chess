@@ -14,13 +14,20 @@ public class Game {
         this.gameName = name;
         this.game = new ChessGame();
     }
-    public Game(Integer id){
+
+    public Game(int id, String name, ChessGame game) {
         this.gameID = id;
+        this.gameName = name;
+        this.game = game;
     }
 
-    public Game(String name){
-        this.gameName = name;
-    }
+//    public Game(Integer id){
+//        this.gameID = id;
+//    }
+
+//    public Game(String name){
+//        this.gameName = name;
+//    }
 
     public void setBlackUsername(String blackUsername) {
         this.blackUsername = blackUsername;
