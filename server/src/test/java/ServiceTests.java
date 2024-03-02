@@ -1,6 +1,7 @@
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import dataAccess.MemoryDataAccess;
+import dataAccess.MySqlDataAccess;
 import model.AuthToken;
 import model.Game;
 import model.User;
@@ -15,13 +16,22 @@ import service.UserService;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceTests {
 
-    DataAccess da = new MemoryDataAccess();
+    DataAccess da;
+
+    {
+        try {
+            da = new MySqlDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     UserService userService = new UserService(da);
     GameService gameService = new GameService(da);
     ClearService clearService = new ClearService(da);
 
     @BeforeEach
-    public void cleanUp()throws TestException{
+    public void cleanUp() throws TestException, DataAccessException {
         da.clearGames();
     }
 

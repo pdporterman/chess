@@ -31,7 +31,7 @@ public interface DataAccess {
 
     Collection<Game> getAllGames() throws DataAccessException;
 
-    boolean setPlayer(String username, String color, Game game);
+    boolean setPlayer(String username, String color, Game game) throws DataAccessException;
 
     void clearGames() throws DataAccessException;
 

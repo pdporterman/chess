@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import dataAccess.MemoryDataAccess;
+import dataAccess.MySqlDataAccess;
 import model.Game;
 import server.handlers.requests.*;
 import server.handlers.responses.*;
@@ -22,7 +23,11 @@ public class Server {
     ClearService clearService;
 
     public Server(){
-        this.da = new MemoryDataAccess();
+        try {
+            this.da = new MySqlDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         this.userService = new UserService(da);
         this.gameService = new GameService(da);
         this.clearService = new ClearService(da);

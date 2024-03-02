@@ -11,6 +11,8 @@ import server.handlers.requests.CreateGameRequest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
+
 import static java.sql.Statement.*;
 import static java.sql.Types.*;
 
@@ -20,12 +22,12 @@ public class MySqlDataAccess implements DataAccess{
             """
             CREATE TABLE IF NOT EXISTS  games (
               `gameID` int NOT NULL AUTO_INCREMENT,
-              `whiteUsername` varchar(256) TEXT DEFAULT NULL,
-              `blackUsername` varchar(256) TEXT DEFAULT NULL,
+              `whiteUsername` varchar(256) DEFAULT NULL,
+              `blackUsername` varchar(256) DEFAULT NULL,
               `gameName` varchar(256) NOT NULL,
               `game` TEXT DEFAULT NULL,
               `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`id`),
+              PRIMARY KEY (`gameID`),
               INDEX(gameName)
             )
             """,
@@ -35,7 +37,6 @@ public class MySqlDataAccess implements DataAccess{
               `password` varchar(256) NOT NULL,
               `email` varchar(256) NOT NULL,
               `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`id`),
               INDEX(username)
             )
             """,
@@ -44,7 +45,6 @@ public class MySqlDataAccess implements DataAccess{
               `token` varchar(256) NOT NULL,
               `username` varchar(256) NOT NULL,
               `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`id`),
               INDEX(username)
             )
             """
@@ -69,7 +69,7 @@ public class MySqlDataAccess implements DataAccess{
 
                                                                                                                                     //users
     public User addUser(User user) throws DataAccessException {
-        var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
+        var statement = "INSERT INTO users (username, password, email, json) VALUES (?, ?, ?, ?)";
         var json = new Gson().toJson(user);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         executeUpdate(statement, user.getUserName(), encoder.encode(user.getPassword()), user.getEmail(), json);
@@ -78,14 +78,16 @@ public class MySqlDataAccess implements DataAccess{
 
     public User getUser(String username, String password) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT user, json FROM user WHERE username=?, password=?";
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            var statement = "SELECT username, password, json FROM users WHERE username=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1, username);
-                ps.setString(2, encoder.encode(password));
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return readUser(rs);
+                        String storedPassword = rs.getString("password");
+                        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                        if (encoder.matches(password, storedPassword)) {
+                            return readUser(rs);
+                        }
                     }
                 }
             }
@@ -150,10 +152,11 @@ public class MySqlDataAccess implements DataAccess{
 
     public Game getGame(Integer gameID) throws DataAccessException{
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, json FROM auths WHERE gameID=?";
+            var statement = "SELECT gameID, json FROM games WHERE gameID=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, gameID);
                 try (var rs = ps.executeQuery()) {
+                    System.out.print(rs.getInt("gameID"));
                     if (rs.next()) {
                         return readGame(rs);
                     }
@@ -168,7 +171,7 @@ public class MySqlDataAccess implements DataAccess{
     public Collection<Game> getAllGames() throws DataAccessException {
         var result = new ArrayList<Game>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT id, json FROM pet";
+            var statement = "SELECT gameID, json FROM games";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -182,8 +185,38 @@ public class MySqlDataAccess implements DataAccess{
         return result;
     }
 
-    public boolean setPlayer(String username, String color, Game game) {
-        return false;
+    public boolean setPlayer(String username, String color, Game game) throws DataAccessException {
+        if (Objects.equals(color, null)) {
+            return true;
+        } else if (Objects.equals(color, "WHITE") && Objects.equals(game.getWhiteUsername(), null)) {
+            try (var conn = DatabaseManager.getConnection()) {
+                var statement = "UPDATE games Set whiteUsername=? WHERE gameID=?";
+                try (var ps = conn.prepareStatement(statement)) {
+                    ps.setString(1, username);
+                    ps.setInt(2, game.getGameID());
+                    ps.executeUpdate();
+                    return true;
+                }
+            }
+            catch (Exception e) {
+                return false;
+            }
+        }
+        else if (Objects.equals(color, "BLACK") && Objects.equals(game.getBlackUsername(), null)) {
+            try (var conn = DatabaseManager.getConnection()) {
+                var statement = "UPDATE games Set blackUsername=? WHERE gameID=?";
+                try (var ps = conn.prepareStatement(statement)) {
+                    ps.setString(1, username);
+                    ps.setInt(2, game.getGameID());
+                    ps.executeUpdate();
+                    return true;
+                }
+            }
+            catch (Exception e) {
+                return false;
+            }
+            }
+            return false;
     }
 
     public void clearGames() throws DataAccessException {
