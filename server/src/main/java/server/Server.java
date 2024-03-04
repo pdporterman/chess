@@ -154,6 +154,7 @@ public class Server {
             return new Gson().toJson(object);
         }
         catch (DataAccessException ex){
+            ex.printStackTrace();
             res.status(getError(ex.getMessage()));
             return new Gson().toJson(new JoinGameResponse(ex.getMessage()));
         }

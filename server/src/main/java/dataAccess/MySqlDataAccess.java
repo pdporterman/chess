@@ -152,7 +152,7 @@ public class MySqlDataAccess implements DataAccess{
 
     public Game getGame(Integer gameID) throws DataAccessException{
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, json FROM games WHERE gameID=?";
+            var statement = "SELECT * FROM games WHERE gameID=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, gameID);
                 try (var rs = ps.executeQuery()) {
@@ -170,7 +170,7 @@ public class MySqlDataAccess implements DataAccess{
     public Collection<Game> getAllGames() throws DataAccessException {
         var result = new ArrayList<Game>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, json FROM games";
+            var statement = "SELECT * FROM games";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -264,7 +264,9 @@ public class MySqlDataAccess implements DataAccess{
     }
 
     private Game readGame(ResultSet rs) throws SQLException {
-        var json = rs.getString("json");
-        return new Gson().fromJson(json, Game.class);
+        Game game = new Game(rs.getInt("gameID"), rs.getString("gameName"));
+        game.setBlackUsername(rs.getString("blackUsername"));
+        game.setWhiteUsername(rs.getString("whiteUsername"));
+        return game;
     }
 }
