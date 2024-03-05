@@ -140,7 +140,7 @@ public class SqlDataAccessTests {
 
     @Test
     @DisplayName("add check and delete auth fail")
-    public void authFailTest() throws DataAccessException {
+    public void authFullFailTest() throws DataAccessException {
         try {
             da.addAuth(new AuthToken("user", "token"));
             if (da.checkAuth("auth")) {
@@ -154,8 +154,79 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @DisplayName("add check and delete auth fail")
+    public void authFullSuccessTest() throws DataAccessException {
+        da.addAuth(new AuthToken("user", "token"));
+        if (da.checkAuth("token")) {
+            AuthToken auth = da.getAuth("token");
+            da.deleteAuth(auth.getToken());
+        }
+    }
+
+    @Test
+    @DisplayName("add and get for game success")
+    public void gameGetSuccessTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        Game temp = da.getGame(game.getGameID());
+        Assertions.assertEquals(temp.getGameID(), 1);
+    }
+
+    @Test
+    @DisplayName("add and get for game fail")
+    public void gameGetFailTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        Game temp = da.getGame(5);
+        Assertions.assertNull(temp);
+    }
+
+    @Test
+    @DisplayName("get game list")
+    public void gameListSuccessTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        Collection<Game> list = da.getAllGames();
+        Assertions.assertEquals(list.size(), 1);
+    }
+
+    @Test
+    @DisplayName("get game list")
+    public void gameListMultipleTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        Game game2 = da.addGame(new CreateGameRequest("game2"));
+        Collection<Game> list = da.getAllGames();
+        Assertions.assertEquals(list.size(), 2);
+    }
+
+    @Test
+    @DisplayName("add and set black player for game success")
+    public void gameSetBlackPlayerSuccessTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        da.setPlayer("user", "BLACK",game);
+        Game temp = da.getGame(game.getGameID());
+        Assertions.assertEquals(temp.getBlackUsername(), "user");
+    }
+
+    @Test
+    @DisplayName("add and set white player for game success")
+    public void gameSetWhitePlayerSuccessTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        da.setPlayer("user", "WHITE",game);
+        Game temp = da.getGame(game.getGameID());
+        Assertions.assertEquals(temp.getWhiteUsername(), "user");
+    }
+
+    @Test
+    @DisplayName("add and set watcher for game success")
+    public void gameSetWatchSuccessTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        da.setPlayer("user", "",game);
+        Game temp = da.getGame(game.getGameID());
+        Assertions.assertNull(temp.getWhiteUsername());
+        Assertions.assertNull(temp.getBlackUsername());
+    }
+
+    @Test
     @DisplayName("add list get and set player for game success")
-    public void gameSuccessTest() throws DataAccessException {
+    public void gameFullSuccessTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
         Collection<Game> list = da.getAllGames();
         Assertions.assertEquals(list.size(), 1);
@@ -166,7 +237,7 @@ public class SqlDataAccessTests {
 
     @Test
     @DisplayName("add list get and set player for game fail")
-    public void gameFailTest() throws DataAccessException {
+    public void gameFullFailTest() throws DataAccessException {
         try {
             Game game = da.addGame(new CreateGameRequest("game"));
             Collection<Game> list = da.getAllGames();
