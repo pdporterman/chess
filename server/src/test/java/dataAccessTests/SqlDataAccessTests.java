@@ -110,6 +110,14 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @DisplayName("auth get success")
+    public void authGetFailTest() throws DataAccessException {
+        da.addAuth(new AuthToken("user", "token"));
+        AuthToken auth = da.getAuth("auth");
+        Assertions.assertNull(auth);
+    }
+
+    @Test
     @DisplayName("auth delete success")
     public void authDeleteSuccessTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
@@ -119,7 +127,15 @@ public class SqlDataAccessTests {
         Assertions.assertFalse(da.checkAuth("token"));
     }
 
-
+    @Test
+    @DisplayName("auth delete success")
+    public void authDeleteFailTest() throws DataAccessException {
+        da.addAuth(new AuthToken("user", "token"));
+        AuthToken auth = da.getAuth("token");
+        Assertions.assertEquals(auth.getUsername(), "user");
+        da.deleteAuth("fail");
+        Assertions.assertTrue(da.checkAuth("token"));
+    }
 
 
     @Test
