@@ -1,3 +1,5 @@
+package dataAccessTests;
+
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import dataAccess.MySqlDataAccess;
