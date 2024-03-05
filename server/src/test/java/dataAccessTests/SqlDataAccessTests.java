@@ -186,7 +186,7 @@ public class SqlDataAccessTests {
         Collection<Game> list = da.getAllGames();
         Assertions.assertEquals(list.size(), 1);
     }
-    
+
 
     @Test
     @DisplayName("get multiple game list")
