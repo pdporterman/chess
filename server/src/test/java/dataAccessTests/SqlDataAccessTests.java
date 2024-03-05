@@ -32,7 +32,8 @@ public class SqlDataAccessTests {
     }
 
     @Test
-    @DisplayName("Clear Success")
+    @Order(1)
+    @DisplayName("Clear Game Success")
     public void clearGameTest() throws DataAccessException {
         CreateGameRequest request = new CreateGameRequest("game");
         da.addGame(request);
@@ -42,6 +43,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Clear User Success")
     public void clearUserTest() throws DataAccessException {
         da.addUser(new User("user", "password", "email"));
@@ -51,6 +53,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Clear Success")
     public void clearAuthTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
@@ -59,6 +62,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(4)
     @DisplayName("add and get user success")
     public void userSuccessTest() throws DataAccessException {
         da.addUser(new User("user", "pass", "mail"));
@@ -67,6 +71,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(5)
     @DisplayName("add and get user fail")
     public void userFailTest() throws DataAccessException {
         try {
@@ -82,14 +87,16 @@ public class SqlDataAccessTests {
     }
 
     @Test
-    @DisplayName("check success")
+    @Order(6)
+    @DisplayName("auth check success")
     public void authCheckSuccessTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
         Assertions.assertTrue(da.checkAuth("token"));
     }
 
     @Test
-    @DisplayName("check fail")
+    @Order(7)
+    @DisplayName("auth check fail")
     public void authCheckFailTest() throws DataAccessException {
         try {
             if (da.checkAuth("token")){
@@ -102,6 +109,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(8)
     @DisplayName("auth get success")
     public void authGetSuccessTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
@@ -110,6 +118,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(9)
     @DisplayName("auth get success")
     public void authGetFailTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
@@ -118,6 +127,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(10)
     @DisplayName("auth delete success")
     public void authDeleteSuccessTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
@@ -128,6 +138,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(11)
     @DisplayName("auth delete success")
     public void authDeleteFailTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
@@ -139,6 +150,7 @@ public class SqlDataAccessTests {
 
 
     @Test
+    @Order(12)
     @DisplayName("add check and delete auth fail")
     public void authFullFailTest() throws DataAccessException {
         try {
@@ -154,6 +166,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(13)
     @DisplayName("add check and delete auth fail")
     public void authFullSuccessTest() throws DataAccessException {
         da.addAuth(new AuthToken("user", "token"));
@@ -164,6 +177,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(14)
     @DisplayName("add and get for game success")
     public void gameGetSuccessTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -172,6 +186,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(15)
     @DisplayName("add and get for game fail")
     public void gameGetFailTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -180,6 +195,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(16)
     @DisplayName("get game list")
     public void gameListSuccessTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -189,6 +205,7 @@ public class SqlDataAccessTests {
 
 
     @Test
+    @Order(17)
     @DisplayName("get multiple game list")
     public void gameListMultipleTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -198,6 +215,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(18)
     @DisplayName("add and set black player for game success")
     public void gameSetBlackPlayerSuccessTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -207,6 +225,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(19)
     @DisplayName("add and set white player for game success")
     public void gameSetWhitePlayerSuccessTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -216,6 +235,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(20)
     @DisplayName("add and set watcher for game success")
     public void gameSetWatchSuccessTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -226,6 +246,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(21)
     @DisplayName("add and set watcher for game fail")
     public void gameSetFailTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -234,6 +255,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(22)
     @DisplayName("add list get and set player for game success")
     public void gameFullSuccessTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
@@ -245,6 +267,7 @@ public class SqlDataAccessTests {
     }
 
     @Test
+    @Order(23)
     @DisplayName("add list get and set player for game fail")
     public void gameFullFailTest() throws DataAccessException {
         try {
@@ -259,8 +282,5 @@ public class SqlDataAccessTests {
             Assertions.assertTrue(ex.getMessage().contains("Error"), "needs to throw error");
         }
     }
-
-
-
-
+    
 }
