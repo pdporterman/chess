@@ -186,9 +186,10 @@ public class SqlDataAccessTests {
         Collection<Game> list = da.getAllGames();
         Assertions.assertEquals(list.size(), 1);
     }
+    
 
     @Test
-    @DisplayName("get game list")
+    @DisplayName("get multiple game list")
     public void gameListMultipleTest() throws DataAccessException {
         Game game = da.addGame(new CreateGameRequest("game"));
         Game game2 = da.addGame(new CreateGameRequest("game2"));
@@ -222,6 +223,14 @@ public class SqlDataAccessTests {
         Game temp = da.getGame(game.getGameID());
         Assertions.assertNull(temp.getWhiteUsername());
         Assertions.assertNull(temp.getBlackUsername());
+    }
+
+    @Test
+    @DisplayName("add and set watcher for game fail")
+    public void gameSetFailTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        Game temp = new Game(52, "name");
+        Assertions.assertFalse(da.setPlayer("user", "",temp));
     }
 
     @Test
