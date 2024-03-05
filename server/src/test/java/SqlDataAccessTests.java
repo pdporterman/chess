@@ -2,13 +2,17 @@ import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import dataAccess.MySqlDataAccess;
 import model.AuthToken;
+import model.Game;
 import model.User;
 import org.junit.jupiter.api.*;
 import passoffTests.testClasses.TestException;
 import server.handlers.requests.CreateGameRequest;
+import server.handlers.responses.ListGamesResponse;
 import service.ClearService;
 import service.GameService;
 import service.UserService;
+
+import java.util.Collection;
 
 public class SqlDataAccessTests {
 
@@ -76,19 +80,49 @@ public class SqlDataAccessTests {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     @DisplayName("add check and delete auth fail")
-    public void authSuccessFail() throws DataAccessException {
+    public void authFailTest() throws DataAccessException {
         try {
             da.addAuth(new AuthToken("user", "token"));
             if (da.checkAuth("auth")) {
                 AuthToken auth = da.getAuth("token");
                 da.deleteAuth(auth.getToken());
             }
-        } catch (DataAccessException ex) {
+        }
+        catch (DataAccessException ex) {
             Assertions.assertTrue(ex.getMessage().contains("Error"), "needs to throw error");
         }
     }
+
+    @Test
+    @Order(6)
+    @DisplayName("add list get and set player for game success")
+    public void gameSuccessTest() throws DataAccessException {
+        Game game = da.addGame(new CreateGameRequest("game"));
+        Collection<Game> list = da.getAllGames();
+        Assertions.assertEquals(list.size(), 1);
+        da.setPlayer("user", "BLACK",game);
+        Game temp = da.getGame(game.getGameID());
+        Assertions.assertEquals(temp.getBlackUsername(), "user");
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("add list get and set player for game fail")
+    public void gameFailTest() throws DataAccessException {
+        try {
+            Game game = da.addGame(new CreateGameRequest("game"));
+            Collection<Game> list = da.getAllGames();
+            Assertions.assertEquals(list.size(), 1);
+            da.setPlayer("user", "BLACK", game);
+            Game temp = da.getGame(5);
+        }
+        catch (DataAccessException ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Error"), "needs to throw error");
+        }
+    }
+
 
 
 
