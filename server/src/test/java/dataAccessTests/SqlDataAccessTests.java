@@ -282,5 +282,5 @@ public class SqlDataAccessTests {
             Assertions.assertTrue(ex.getMessage().contains("Error"), "needs to throw error");
         }
     }
-    
+
 }
