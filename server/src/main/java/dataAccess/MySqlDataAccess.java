@@ -145,7 +145,7 @@ public class MySqlDataAccess implements DataAccess{
     public Game addGame(CreateGameRequest request) throws DataAccessException {
         var statement = "INSERT INTO games (gameName, json) VALUES (?, ?)";
         Game temp = new Game(0, request.getGameName());
-        var json = new Gson().toJson(temp);
+        var json = new Gson().toJson(temp.getGame());
         int id = executeUpdate(statement, temp.getGameName(), json);
         return new Game(id , request.getGameName(), temp.getGame());
     }
@@ -267,6 +267,7 @@ public class MySqlDataAccess implements DataAccess{
         Game game = new Game(rs.getInt("gameID"), rs.getString("gameName"));
         game.setBlackUsername(rs.getString("blackUsername"));
         game.setWhiteUsername(rs.getString("whiteUsername"));
+        game.setGame(new Gson().fromJson(rs.getString("json"), ChessGame.class));
         return game;
     }
 }
