@@ -16,13 +16,13 @@ public class PrintChess {
 
 
     public static void main(){
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        ChessGame game = new ChessGame();
-        ArrayList<String> header = new String[{"a", "b", "c", "d", "e", "f", "g", "h"}];
-        out.print(ERASE_SCREEN);
-
-
-        drawBoard(, );
+//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//        ChessGame game = new ChessGame();
+//        ArrayList<String> header = new String[{"a", "b", "c", "d", "e", "f", "g", "h"}];
+//        out.print(ERASE_SCREEN);
+//
+//
+//        drawBoard(, );
 
 
     }

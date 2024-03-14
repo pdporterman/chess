@@ -5,16 +5,20 @@ import java.util.Scanner;
 import serverFacade.ServerFacade;
 
 public class ConsoleUI {
-    ServerFacade server;
 
-    public void run(){
+    public static void main(String[] args){
+        ServerFacade server = new ServerFacade();
+        System.out.println("welcome to chess");
+
         Scanner scanner = new Scanner(System.in);
-        String input = "";
-        while (!input.contains("quit")){
-            String line = scanner.nextLine();
+        String result = "";
+        while (!result.contains("quit")){
+
             try{
-                input = server.eval(line);
-                System.out.print(SET_TEXT_COLOR_BLUE + input);
+                System.out.println(SET_TEXT_COLOR_WHITE + server.menu());
+                String input = scanner.nextLine();
+                result = server.eval(input);
+                System.out.println(SET_TEXT_COLOR_BLUE + result);
             }
             catch (Throwable e) {
                 var msg = e.toString();
