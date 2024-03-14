@@ -22,7 +22,6 @@ public class PrintChess {
         String[] margin = {"1","2","3","4","5","6","7","8"};
         out.print(ERASE_SCREEN);
 
-
         drawBoard(out, header, margin, board);
 
 
@@ -35,6 +34,29 @@ public class PrintChess {
     }
 
     private static void drawRows(PrintStream out, String[] margin, ChessPiece[][] board) {
+        for (int row = 0; row <= board.length; row++){
+            drawRow(out, row, margin, board[row]);
+        }
+    }
+
+    private static void drawRow(PrintStream out, int rowNum, String[] margin, ChessPiece[] row) {
+        printCheckerBuffer(out, rowNum);
+        printCheckerText(out, rowNum, margin, row);
+        printCheckerBuffer(out, rowNum);
+    }
+
+    private static void printCheckerBuffer(PrintStream out, int rowNum) {
+        printBuffer(out, 1);
+        if (rowNum % 2 == 0){
+            setWhite(out);
+        }
+        for (int i=0; i <= BOARD_SIZE_IN_SQUARES; i++){
+            out.print(EMPTY.repeat(3));
+        }
+        printBuffer(out, 1);
+    }
+
+    private static void printCheckerText(PrintStream out, int rowNum, String[] margin, ChessPiece[] row) {
     }
 
     private static void drawHeaders(PrintStream out, String[] headers) {
@@ -82,6 +104,11 @@ public class PrintChess {
     private static void setBlack(PrintStream out) {
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_BLACK);
+    }
+
+    private static void setWhite(PrintStream out) {
+        out.print(SET_BG_COLOR_WHITE);
+        out.print(SET_TEXT_COLOR_WHITE);
     }
 
 
