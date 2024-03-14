@@ -48,6 +48,7 @@ public class ServerFacade {
             case "list games" -> listGame();
             case "clear" -> clear();
             case "quit" -> "good bye";
+            case "help" -> "just type out the action you wish to take, for example to log in type 'login'";
             default -> "invalid input, please enter response matching available options";
         };
     }
@@ -57,6 +58,7 @@ public class ServerFacade {
             return """
                     - login
                     - register
+                    - help
                     - quit
                     """;
         }
@@ -65,6 +67,7 @@ public class ServerFacade {
                 - create game
                 - join game
                 - list games
+                - help
                 - quit
                 """;
     }
