@@ -12,7 +12,7 @@ public class ConsoleUI {
 
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        while (!result.contains("quit")){
+        while (!result.contains("bye")){
 
             try{
                 System.out.println(SET_TEXT_COLOR_WHITE + server.menu());

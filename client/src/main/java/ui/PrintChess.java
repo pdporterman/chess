@@ -39,6 +39,8 @@ public class PrintChess {
 
     private static void drawHeaders(PrintStream out, String[] headers) {
         setBlack(out);
+        printBufferRow(out);
+        printBuffer(out, 1);
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             drawHeader(out, headers[boardCol]);
 
@@ -46,8 +48,17 @@ public class PrintChess {
                 out.print(EMPTY.repeat(LINE_WIDTH_IN_CHARS));
             }
         }
+        out.println();
+        printBufferRow(out);
+    }
 
+    private static void printBufferRow(PrintStream out) {
+        printBuffer(out, BOARD_SIZE_IN_SQUARES);
+        out.println();
+    }
 
+    private static void printBuffer(PrintStream out, int amount) {
+        out.print(EMPTY.repeat(SQUARE_SIZE_IN_CHARS * amount));
     }
 
     private static void drawHeader(PrintStream out, String header) {
