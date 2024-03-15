@@ -14,6 +14,8 @@ public class PrintChess {
     private static final int SQUARE_SIZE_IN_CHARS = 3;
     private static final int LINE_WIDTH_IN_CHARS = 1;
 
+    private static boolean backgroundBlack;
+
 
     public static void main(String[] args){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -34,7 +36,7 @@ public class PrintChess {
     }
 
     private static void drawRows(PrintStream out, String[] margin, ChessPiece[][] board) {
-        for (int row = 0; row <= board.length; row++){
+        for (int row = 0; row <= board.length - 1; row++){
             drawRow(out, row, margin, board[row]);
         }
     }
@@ -47,20 +49,25 @@ public class PrintChess {
 
     private static void printCheckerBuffer(PrintStream out, int rowNum) {
         printBuffer(out, 1);
-        if (rowNum % 2 == 0){
-            setWhite(out);
-        }
-        for (int i=0; i <= BOARD_SIZE_IN_SQUARES; i++){
+        for (int i = 0; i < BOARD_SIZE_IN_SQUARES; i++){
+            if (rowNum + i % 2 == 0){
+                out.print(SET_BG_COLOR_WHITE);
+            }
+            else{
+                out.print(SET_BG_COLOR_BLACK);
+            }
             out.print(EMPTY.repeat(3));
         }
+        out.print(SET_BG_COLOR_LIGHT_GREY);
         printBuffer(out, 1);
+        out.println();
     }
 
     private static void printCheckerText(PrintStream out, int rowNum, String[] margin, ChessPiece[] row) {
     }
 
     private static void drawHeaders(PrintStream out, String[] headers) {
-        setBlack(out);
+        out.print(SET_BG_COLOR_LIGHT_GREY);
         printBufferRow(out);
         printBuffer(out, 1);
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
@@ -93,23 +100,11 @@ public class PrintChess {
     }
 
     private static void printHeaderText(PrintStream out, String player) {
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_WHITE);
 
         out.print(player);
 
-        setBlack(out);
     }
-
-    private static void setBlack(PrintStream out) {
-        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_TEXT_COLOR_BLACK);
-    }
-
-    private static void setWhite(PrintStream out) {
-        out.print(SET_BG_COLOR_WHITE);
-        out.print(SET_TEXT_COLOR_WHITE);
-    }
-
 
 }
