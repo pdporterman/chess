@@ -34,7 +34,7 @@ public class Server {
     }
     public static void main(String[] args){
         try{
-            int port = Integer.parseInt(args[0]);
+            int port = 3000;
             Server temp = new Server();
             temp.run(port);
         }

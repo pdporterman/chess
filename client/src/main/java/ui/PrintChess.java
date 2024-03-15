@@ -26,6 +26,17 @@ public class PrintChess {
 
     }
 
+    public void displayBoard(ChessPiece[][] board){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        ChessPiece[][] other = flip(board);
+        out.print(ERASE_SCREEN);
+
+        drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, board);
+        out.println(SET_BG_COLOR_BLACK);
+        drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other);
+
+    }
+
     public static ChessPiece[][] flip(ChessPiece[][] array) {
         int rows = array.length;
         int cols = array[0].length;

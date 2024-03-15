@@ -1,31 +1,55 @@
 package ui;
 
 import static ui.EscapeSequences.*;
+
+import java.net.MalformedURLException;
+import java.util.Objects;
 import java.util.Scanner;
+
+import model.AuthToken;
+import server.handlers.requests.LoginRequest;
+import server.handlers.responses.LoginResponse;
+import server.handlers.responses.LogoutResponse;
 import serverFacade.ServerFacade;
 
 public class ConsoleUI {
-    private static Boolean token = false;
-    private ServerFacade server = new ServerFacade();
+    private String token = null;
+    private final ServerFacade server = new ServerFacade();
+
+    private final Scanner scanner = new Scanner(System.in);
+
+    public ConsoleUI() throws MalformedURLException {
+    }
 
     public String login(){
-        System.out.println("logged in");
-        token = true;
-        return "keep going";
+        try {
+            System.out.print("please enter username: ");
+            String user = scanner.next();
+            System.out.print("please enter password: ");
+            String pass = scanner.next();
+            LoginResponse response = server.login(new LoginRequest(user, pass));
+            token = response.getAuthToken();
+            return "logged in";
+        } catch (Exception e) {
+            return "failed to log in";
+        }
     }
     public String register(){
         System.out.println("user created");
-        token = true;
+
         return "keep going";
     }
     public String logout(){
         System.out.println("logged out");
-        token = true;
+
         return "keep going";
     }
     public String createGame(){
         System.out.println("game created");
         return "keep going";
+    }
+    private String observeGame() {
+        return "aahhh";
     }
     public String joinGame(){
         System.out.println("joined game");
@@ -49,6 +73,7 @@ public class ConsoleUI {
             case "logout" -> logout();
             case "create game" -> createGame();
             case "join game" -> joinGame();
+            case "observe game" -> observeGame();
             case "list games" -> listGame();
             case "clear" -> clear();
             case "quit" -> "good bye";
@@ -57,8 +82,10 @@ public class ConsoleUI {
         };
     }
 
+
+
     public String menu() {
-        if (!token) {
+        if (!Objects.equals(token, "no good")) {
             return """
                     - login
                     - register
@@ -70,6 +97,7 @@ public class ConsoleUI {
                 - logout
                 - create game
                 - join game
+                - observe game
                 - list games
                 - help
                 - quit
