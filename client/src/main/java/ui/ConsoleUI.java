@@ -5,27 +5,75 @@ import java.util.Scanner;
 import serverFacade.ServerFacade;
 
 public class ConsoleUI {
+    private static Boolean token = false;
+    private ServerFacade server = new ServerFacade();
 
-    public static void main(String[] args){
-        ServerFacade server = new ServerFacade();
-        System.out.println("welcome to chess");
+    public String login(){
+        System.out.println("logged in");
+        token = true;
+        return "keep going";
+    }
+    public String register(){
+        System.out.println("user created");
+        token = true;
+        return "keep going";
+    }
+    public String logout(){
+        System.out.println("logged out");
+        token = true;
+        return "keep going";
+    }
+    public String createGame(){
+        System.out.println("game created");
+        return "keep going";
+    }
+    public String joinGame(){
+        System.out.println("joined game");
+        return "keep going";
+    }
+    public String listGame(){
+        System.out.println("here are the games");
+        return "keep going";
+    }
+    public String clear(){
+        System.out.println("cleared");
+        return "keep going";
+    }
 
-        Scanner scanner = new Scanner(System.in);
-        String result = "";
-        while (!result.contains("bye")){
 
-            try{
-                System.out.println(SET_TEXT_COLOR_WHITE + server.menu());
-                String input = scanner.nextLine();
-                result = server.eval(input);
-                System.out.println(SET_TEXT_COLOR_BLUE + result);
-            }
-            catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
-            }
+    public String eval(String input){
+        String word = input.toLowerCase();
+        return switch (word){
+            case "login" -> login();
+            case "register" -> register();
+            case "logout" -> logout();
+            case "create game" -> createGame();
+            case "join game" -> joinGame();
+            case "list games" -> listGame();
+            case "clear" -> clear();
+            case "quit" -> "good bye";
+            case "help" -> "just type out the action you wish to take, for example to log in type 'login'";
+            default -> "invalid input, please enter response matching available options";
+        };
+    }
+
+    public String menu() {
+        if (!token) {
+            return """
+                    - login
+                    - register
+                    - help
+                    - quit
+                    """;
         }
-        System.out.println();
+        return """
+                - logout
+                - create game
+                - join game
+                - list games
+                - help
+                - quit
+                """;
     }
 
 }

@@ -1,8 +1,21 @@
 package serverFacade;
 
+import model.AuthToken;
+import model.User;
+import server.handlers.requests.LoginRequest;
+import server.handlers.responses.LoginResponse;
+
 public class ServerFacade {
 
     private Boolean token = false;
+
+    public LoginResponse login(LoginRequest request){
+        System.out.println("logged in");
+        token = true;
+        User user = new User("user","pass","mail");
+        AuthToken authToken = new AuthToken("user");
+        return new LoginResponse(user,authToken);
+    }
 
     public String login(){
         System.out.println("logged in");
