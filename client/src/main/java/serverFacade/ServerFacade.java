@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 
 public class ServerFacade {
 
-    private String token = "no good";
     private ClientCommunicator communicator = new ClientCommunicator("http://localhost:3000");
 
     public LoginResponse login(LoginRequest request) throws ResponseException {
@@ -24,7 +23,7 @@ public class ServerFacade {
         return communicator.makeRequest("POST", path, request, RegisterResponse.class);
     }
     public LogoutResponse logout(LogoutRequest request) throws ResponseException {
-        var path = "/session";
+        var path = String.format("/session/%s", request.getAuthorization());
         return communicator.makeRequest("DELETE", path, request, LogoutResponse.class);
     }
     public CreateGameResponse createGame(CreateGameRequest request) throws ResponseException {
