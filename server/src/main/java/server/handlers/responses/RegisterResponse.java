@@ -17,6 +17,10 @@ public class RegisterResponse {
         this.message = mess;
     }
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
     public String getUsername() {
         return username;
     }

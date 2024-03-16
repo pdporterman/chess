@@ -1,9 +1,12 @@
 package clientTests;
 
+import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
 import server.Server;
 import server.handlers.requests.LoginRequest;
+import server.handlers.requests.RegisterRequest;
 import server.handlers.responses.LoginResponse;
+import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
 
 import java.io.IOException;
@@ -16,6 +19,11 @@ public class ServerFacadeTests {
     private ServerFacade facade = new ServerFacade();
 
     public ServerFacadeTests() throws MalformedURLException {
+    }
+
+    @BeforeEach
+    public void cleanUp() throws ResponseException {
+        facade.clear();
     }
 
     @BeforeAll
@@ -32,12 +40,23 @@ public class ServerFacadeTests {
 
 
     @Test
-    public void loginSuccess() throws IOException {
+    public void loginSuccess() {
+        try {
+            facade.register(new RegisterRequest("user","pass","email"));
+            LoginResponse response = facade.login(new LoginRequest("user", "pass"));
+            Assertions.assertNotNull(response);
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void loginFail(){
         try {
             LoginResponse response = facade.login(new LoginRequest("user", "pass"));
-            Assertions.assertTrue(true);
-        } catch (IOException e) {
             Assertions.fail();
+        } catch (Exception e) {
+            Assertions.assertTrue(true);
         }
     }
 

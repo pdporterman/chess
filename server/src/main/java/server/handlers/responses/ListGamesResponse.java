@@ -16,4 +16,7 @@ public class ListGamesResponse {
         this.message = mess;
     }
 
+    public Collection<Game> getGames() {
+        return games;
+    }
 }

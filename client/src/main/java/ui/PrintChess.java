@@ -26,7 +26,8 @@ public class PrintChess {
 
     }
 
-    public void displayBoard(ChessPiece[][] board){
+    public void displayBoard(){
+        ChessPiece[][] board = new ChessGame().getBoard().getBoard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         ChessPiece[][] other = flip(board);
         out.print(ERASE_SCREEN);
