@@ -185,7 +185,7 @@ public class MySqlDataAccess implements DataAccess{
     }
 
     public boolean setPlayer(String username, String color, Game game) throws DataAccessException {
-        System.out.println(game.getGameID() + game.getGameName() + game.getBlackUsername() + game.getWhiteUsername());
+        //System.out.println(game.getGameID() + game.getGameName() + game.getBlackUsername() + game.getWhiteUsername());
         if (Objects.equals(color, null)) {
             return true;
         } else if (Objects.equals(color, "WHITE") && Objects.equals(game.getWhiteUsername(), null)) {

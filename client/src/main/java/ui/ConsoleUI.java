@@ -14,7 +14,7 @@ import serverFacade.ServerFacade;
 
 public class ConsoleUI {
     private String token = null;
-    private PrintChess printer = new PrintChess();
+    private final PrintChess printer = new PrintChess();
     private final ServerFacade server = new ServerFacade();
     private final Scanner scanner = new Scanner(System.in);
 
@@ -59,11 +59,10 @@ public class ConsoleUI {
         try {
             System.out.print("please enter a game name: ");
             String name = scanner.next();
-            CreateGameResponse response = server.createGame(new CreateGameRequest(name));
-            if (response != null){
-                return "game created";
-            }
-            return "failed to create game";
+            CreateGameRequest request = new CreateGameRequest(name);
+            request.setAuth(token);
+            CreateGameResponse response = server.createGame(request);
+            return "game created";
         } catch (Exception e) {
             return "failed to create game (" + e.toString() + ")";
         }
@@ -73,10 +72,11 @@ public class ConsoleUI {
             System.out.print("please enter a gameID number: ");
             String gameid = scanner.next();
             JoinGameRequest request = new JoinGameRequest(Integer.parseInt(gameid));
-            request.playerColor = "";
+            request.playerColor = null;
+            request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
             printer.displayBoard();
-            return "observing game\n";
+            return SET_BG_COLOR_BLACK + "observing game";
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";
         }
@@ -89,9 +89,10 @@ public class ConsoleUI {
             String color = scanner.next();
             JoinGameRequest request = new JoinGameRequest(Integer.parseInt(gameid));
             request.playerColor = color;
+            request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
             printer.displayBoard();
-            return "joined game as " + color;
+            return SET_BG_COLOR_BLACK + "joined game as " + color;
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";
         }
@@ -101,7 +102,7 @@ public class ConsoleUI {
             ListGamesResponse response = server.listGame(new ListGamesRequest(token));
             return "these are the games\n" + response.getGames().toString();
         } catch (Exception e) {
-            return "failed to get games (" + e.toString() + ")";
+            return "failed to get games (" + e.getMessage() + ")";
         }
     }
     public String clear(){

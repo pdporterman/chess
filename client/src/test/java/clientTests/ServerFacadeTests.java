@@ -133,7 +133,10 @@ public class ServerFacadeTests {
             CreateGameRequest request = new CreateGameRequest("game");
             request.setAuth(temp.getAuthToken());
             CreateGameResponse temp2 = facade.createGame(request);
-            JoinGameResponse response = facade.joinGame(new JoinGameRequest(temp2.getGameID()));
+            JoinGameRequest join = new JoinGameRequest(temp2.getGameID());
+            join.playerColor = "WHITE";
+            join.setAuthorization(temp.getAuthToken());
+            JoinGameResponse response = facade.joinGame(join);
             Assertions.assertNotNull(response);
         } catch (Exception e) {
             Assertions.fail();
