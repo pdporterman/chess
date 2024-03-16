@@ -141,14 +141,14 @@ public class ConsoleUI {
 
     public String menu() {
         if (Objects.equals(token, null)) {
-            return """
+            return SET_BG_COLOR_DARK_GREY + """
                     - login
                     - register
                     - help
                     - quit
                     """;
         }
-        return """
+        return SET_BG_COLOR_DARK_GREY + """
                 - logout
                 - create game
                 - join game

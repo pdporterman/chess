@@ -25,7 +25,7 @@ public class ListGamesResponse {
     public String gamesToString(){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         for (Game game: games){
-            out.println(game.getGameID()+ " : "+game.getGameName());
+            out.println(game.getGameID()+ " : " + game.getGameName());
         }
         return out.toString();
     }
