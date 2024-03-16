@@ -163,11 +163,12 @@ public class ServerFacadeTests {
             RegisterResponse temp = facade.register(new RegisterRequest("user","pass","email"));
             CreateGameRequest game1 = new CreateGameRequest("game");
             game1.setAuth(temp.getAuthToken());
-            CreateGameRequest game2 = new CreateGameRequest("game");
+            CreateGameRequest game2 = new CreateGameRequest("other");
             game2.setAuth(temp.getAuthToken());
             CreateGameResponse temp2 = facade.createGame(game1);
             CreateGameResponse temp3 = facade.createGame(game2);
             ListGamesResponse response = facade.listGame(new ListGamesRequest(temp.getAuthToken()));
+
             Assertions.assertEquals(response.getGames().size(),2);
         } catch (Exception e) {
             Assertions.fail();

@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Objects;
 
 public class ClientCommunicator {
     private final String serverUrl;
@@ -24,8 +25,12 @@ public class ClientCommunicator {
                 http.addRequestProperty("authorization", auth);
             }
 
+            if (!Objects.equals(method, "GET")){
+                writeBody(request, http);
+            }
 
-            writeBody(request, http);
+
+
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);

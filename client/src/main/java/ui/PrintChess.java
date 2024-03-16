@@ -35,6 +35,7 @@ public class PrintChess {
         drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, board);
         out.println(SET_BG_COLOR_BLACK);
         drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other);
+        out.print(CLEAR_BACKGROUND);
 
     }
 
@@ -71,15 +72,18 @@ public class PrintChess {
         out.print(" ");
         for (int i = 0; i < BOARD_SIZE_IN_SQUARES; i++){
             if ((rowNum + i) % 2 == 0){
+                out.print(RESET_BG_COLOR);
                 out.print(SET_BG_COLOR_WHITE);
             }
             else{
+                out.print(RESET_BG_COLOR);
                 out.print(SET_BG_COLOR_BLACK);
             }
             out.print(" ");
             out.print(piece(row[i]));
             out.print(" ");
         }
+        out.print(RESET_BG_COLOR);
         out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_WHITE);
         out.print(" ");

@@ -100,7 +100,7 @@ public class ConsoleUI {
     public String listGame(){
         try {
             ListGamesResponse response = server.listGame(new ListGamesRequest(token));
-            return "these are the games\n" + response.getGames().toString();
+            return "these are the games\n" + response.gamesToString();
         } catch (Exception e) {
             return "failed to get games (" + e.getMessage() + ")";
         }
