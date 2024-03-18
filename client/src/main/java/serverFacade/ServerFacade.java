@@ -31,10 +31,12 @@ public class ServerFacade {
         var path = "/game";
         return communicator.makeRequest("PUT", path, request, JoinGameResponse.class, request.getAuthorization());
     }
+
     public ListGamesResponse listGame(ListGamesRequest  request) throws ResponseException {
         var path = "/game";
         return communicator.makeRequest("GET", path, request, ListGamesResponse.class, request.getAuthorization());
     }
+
     public void clear() throws ResponseException {
         var path = "/db";
         communicator.makeRequest("DELETE", path, null, ClearResponse.class, null);
