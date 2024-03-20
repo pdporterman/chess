@@ -116,15 +116,11 @@ public class PrintChess {
 
     private static void drawHeaders(PrintStream out, String[] headers) {
         out.print(SET_BG_COLOR_LIGHT_GREY);
-        printBuffer(out,1);
+        out.print(" ".repeat(3));
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             drawHeader(out, headers[boardCol]);
         }
         out.println();
-    }
-
-    private static void printBuffer(PrintStream out, int amount) {
-        out.print(" ".repeat(SQUARE_SIZE_IN_CHARS * amount));
     }
 
     private static void drawHeader(PrintStream out, String header) {
