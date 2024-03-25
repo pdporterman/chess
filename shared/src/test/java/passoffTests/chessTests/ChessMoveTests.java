@@ -1,6 +1,6 @@
 package passoffTests.chessTests;
 
-import chess.moves.ChessMove;
+import chess.ChessMove;
 import chess.ChessPiece;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
