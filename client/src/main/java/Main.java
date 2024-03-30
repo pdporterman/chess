@@ -1,4 +1,5 @@
 import chess.*;
+import exception.ResponseException;
 import serverFacade.ServerFacade;
 import ui.*;
 
@@ -8,7 +9,7 @@ import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args){
         ConsoleUI consoleUI = new ConsoleUI();
         System.out.println("welcome to chess");
         Scanner scanner = new Scanner(System.in);

@@ -8,8 +8,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import webSocketMessages.userCommands.*;
-import webSocketMessages.serverMessages.ErrorMessage;
-import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessages;
 import webSocketMessages.serverMessages.ServerMessage;
 
@@ -26,42 +24,41 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) throws IOException, DataAccessException {
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         switch (action.getCommandType()) {
-            case JOIN_OBSERVER, JOIN_PLAYER -> action = new Gson().fromJson(message, JoinPlayerCommand.class);
+            case JOIN_OBSERVER, JOIN_PLAYER -> joinGame(new Gson().fromJson(message, JoinPlayerCommand.class), session);
             case  LEAVE, RESIGN -> action = new Gson().fromJson(message, LeaveCommand.class);
             case MAKE_MOVE -> action = new Gson().fromJson(message, MakeMoveCommand.class);
         }
     }
 
-    private void joinGame(String authtoken, Session session) throws IOException, DataAccessException {
-        connections.add(authtoken, session);
-        String userName = dataAccess.getAuth(authtoken).getUsername() ;
-        var message = String.format("%s is in the shop", userName);
+    private void joinGame(JoinPlayerCommand command, Session session) throws IOException, DataAccessException {
+        connections.add(command.getAuthString(), session);
+        String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
+        String message;
+        if (command.getColor() == null){
+            message = String.format("%s is observing the game!", userName);
+        }
+        else{
+            message = String.format("%s has joined the game as %s!", userName, command.getColor());
+        }
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(userName, notification);
+        connections.broadcast(command.getAuthString(), notification);
     }
 
-    private void observeGame(String visitorName, Session session) throws IOException {
-        connections.add(visitorName, session);
-        var message = String.format("%s is in the shop", visitorName);
+    private void leaveGame(LeaveCommand command) throws IOException, DataAccessException {
+        String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
+        connections.remove(command.getAuthString());
+        String message;
+        if (command.isResign()){
+            message = String.format("%s resigns!", userName);
+        }
+        else{
+            message = String.format("%s left the game", userName);
+        }
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(visitorName, notification);
-    }
-
-    private void resignGame(String visitorName, Session session) throws IOException {
-        connections.remove(visitorName);
-        var message = String.format("%s left the shop", visitorName);
-        var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(visitorName, notification);
-    }
-
-    private void leaveGame(String visitorName) throws IOException {
-        connections.remove(visitorName);
-        var message = String.format("%s left the shop", visitorName);
-        var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(visitorName, notification);
+        connections.broadcast(command.getAuthString(), notification);
     }
 
     private void makeMove(String authtoken, ChessMove move) throws IOException {

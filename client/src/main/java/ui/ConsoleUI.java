@@ -11,9 +11,12 @@ import server.handlers.requests.*;
 import server.handlers.responses.*;
 import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
+import webSocket.WebSocketFacade;
 
 public class ConsoleUI {
     private String token = null;
+
+    private String game = null;
     private final PrintChess printer = new PrintChess();
     private final ServerFacade server = new ServerFacade();
     private final Scanner scanner = new Scanner(System.in);
@@ -148,7 +151,18 @@ public class ConsoleUI {
                     - quit
                     """;
         }
-        return SET_BG_COLOR_DARK_GREY + """
+        else if (game != null){
+            return SET_BG_COLOR_DARK_GREY + """
+                - make move
+                - highlight moves
+                - redraw board
+                - resign
+                - leave
+                - help
+                """;
+        }
+        else{
+            return SET_BG_COLOR_DARK_GREY + """
                 - logout
                 - create game
                 - join game
@@ -157,6 +171,8 @@ public class ConsoleUI {
                 - help
                 - quit
                 """;
+        }
+
     }
 
 }
