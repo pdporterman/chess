@@ -1,6 +1,6 @@
-package webScoketMessages;
+package webSocketMessages.serverMessages;
 
-import webScoketMessages.serverMessages.ServerMessage;
+import webSocketMessages.serverMessages.ServerMessage;
 
 public class ErrorMessage extends ServerMessage {
 

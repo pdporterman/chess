@@ -1,4 +1,4 @@
-package webScoketMessages.userCommands;
+package webSocketMessages.userCommands;
 
 public class LeaveCommand extends UserGameCommand{
     private int gameId;
