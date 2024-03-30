@@ -11,16 +11,6 @@ public class JoinPlayerCommand extends UserGameCommand{
         this.color = color;
     }
 
-    @Override
-    public CommandType getCommandType() {
-        return super.getCommandType();
-    }
-
-    @Override
-    public String getAuthString() {
-        return super.getAuthString();
-    }
-
     public int getGameId() {
         return gameId;
     }

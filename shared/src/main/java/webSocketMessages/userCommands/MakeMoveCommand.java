@@ -11,16 +11,6 @@ public class MakeMoveCommand extends UserGameCommand{
         this.move = move;
     }
 
-    @Override
-    public CommandType getCommandType() {
-        return super.getCommandType();
-    }
-
-    @Override
-    public String getAuthString() {
-        return super.getAuthString();
-    }
-
     public int getGameId() {
         return gameId;
     }

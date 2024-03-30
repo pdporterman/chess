@@ -10,11 +10,6 @@ public class ErrorMessage extends ServerMessage {
         this.errorMessage = errorMessage;
     }
 
-    @Override
-    public ServerMessageType getServerMessageType() {
-        return super.getServerMessageType();
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }

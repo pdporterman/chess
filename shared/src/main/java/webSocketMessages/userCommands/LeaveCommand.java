@@ -9,16 +9,6 @@ public class LeaveCommand extends UserGameCommand{
         this.resign = resign;
     }
 
-    @Override
-    public CommandType getCommandType() {
-        return super.getCommandType();
-    }
-
-    @Override
-    public String getAuthString() {
-        return super.getAuthString();
-    }
-
     public int getGameId() {
         return gameId;
     }

@@ -7,7 +7,7 @@ import dataAccess.*;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import webSocketMessages.*;
+import webSocketMessages.userCommands.*;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessages;
@@ -27,11 +27,11 @@ public class WebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
-        ServerMessage action = new Gson().fromJson(message, ServerMessage.class);
-        switch (action.getServerMessageType()) {
-            case ERROR -> action = new Gson().fromJson(message, ErrorMessage.class);
-            case LOAD_GAME -> action = new Gson().fromJson(message, LoadGameMessage.class);
-            case  NOTIFICATION-> action = new Gson().fromJson(message, NotificationMessages.class);
+        UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
+        switch (action.getCommandType()) {
+            case JOIN_OBSERVER, JOIN_PLAYER -> action = new Gson().fromJson(message, JoinPlayerCommand.class);
+            case  LEAVE, RESIGN -> action = new Gson().fromJson(message, LeaveCommand.class);
+            case MAKE_MOVE -> action = new Gson().fromJson(message, MakeMoveCommand.class);
         }
     }
 
