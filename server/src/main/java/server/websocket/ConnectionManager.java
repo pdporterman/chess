@@ -16,15 +16,15 @@ public class ConnectionManager {
         connections.put(authtoken, connection);
     }
 
-    public void remove(String visitorName) {
-        connections.remove(visitorName);
+    public void remove(String authtoken) {
+        connections.remove(authtoken);
     }
 
-    public void broadcast(String excludeVisitorName, NotificationMessages notification) throws IOException {
+    public void broadcast(String authtoken, NotificationMessages notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (!c.authtoken.equals(excludeVisitorName)) {
+                if (!c.authtoken.equals(authtoken)) {
                     c.send(notification.toString());
                 }
             } else {
