@@ -1,7 +1,11 @@
 package webSocket;
 
 import webSocketMessages.serverMessages.NotificationMessages;
+import ui.EscapeSequences;
 
 public class NotificationHandler {
-    void notify(NotificationMessages notification);
+    public void notify(NotificationMessages notification) {
+        System.out.println(notification.getMessage());
+    }
+
 }
