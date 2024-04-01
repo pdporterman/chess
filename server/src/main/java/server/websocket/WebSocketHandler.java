@@ -28,7 +28,7 @@ public class WebSocketHandler {
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER, JOIN_PLAYER -> joinGame(new Gson().fromJson(message, JoinPlayerCommand.class), session);
-            case  LEAVE, RESIGN -> action = new Gson().fromJson(message, LeaveCommand.class);
+            case  LEAVE, RESIGN -> leaveGame(new Gson().fromJson(message, LeaveCommand.class));
             case MAKE_MOVE -> action = new Gson().fromJson(message, MakeMoveCommand.class);
         }
     }
@@ -38,7 +38,7 @@ public class WebSocketHandler {
         String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
         String message;
         if (command.getColor() == null){
-            message = String.format("%s is observing the game!", userName);
+            message = String.format("%s is watching the game!", userName);
         }
         else{
             message = String.format("%s has joined the game as %s!", userName, command.getColor());
@@ -55,7 +55,7 @@ public class WebSocketHandler {
             message = String.format("%s resigns!", userName);
         }
         else{
-            message = String.format("%s left the game", userName);
+            message = String.format("%s left the game, waiting for another player", userName);
         }
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.broadcast(command.getAuthString(), notification);
