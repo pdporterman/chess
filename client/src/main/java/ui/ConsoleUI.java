@@ -29,6 +29,7 @@ public class ConsoleUI {
             String pass = scanner.next();
             LoginResponse response = server.login(new LoginRequest(user, pass));
             token = response.getAuthToken();
+
             return "logged in";
         } catch (Exception e) {
             return "failed to log in";
