@@ -1,9 +1,11 @@
 package server.websocket;
 
+import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
 import com.google.gson.Gson;
 import dataAccess.*;
+import model.Game;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -34,14 +36,14 @@ public class WebSocketHandler {
     }
 
     private void joinGame(JoinPlayerCommand command, Session session) throws IOException, DataAccessException {
-        connections.add(command.getAuthString(), session);
-        String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
+        String username = dataAccess.getAuth(command.getAuthString()).getUsername();
+        connections.add(command.getAuthString(), username, session);
         String message;
         if (command.getColor() == null){
-            message = String.format("%s is watching the game!", userName);
+            message = String.format("%s is watching the game!", username);
         }
         else{
-            message = String.format("%s has joined the game as %s!", userName, command.getColor());
+            message = String.format("%s has joined the game as %s!", username, command.getColor());
         }
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.broadcast(command.getAuthString(), notification);
@@ -61,10 +63,12 @@ public class WebSocketHandler {
         connections.broadcast(command.getAuthString(), notification);
     }
 
-    private void makeMove(String authtoken, ChessMove move) throws IOException {
-        var message = String.format("%s left the shop", authtoken);
+    private void makeMove(MakeMoveCommand command, ChessMove move) throws IOException, DataAccessException {
+        Game gameContainer = dataAccess.getGame(command.getGameId());
+        ChessGame game =  gameContainer.getGame();
+        var message = String.format("%s left the shop", command.getAuthString());
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(authtoken, notification);
+        connections.broadcast(command.getAuthString(), notification);
     }
 
     private void HighlightMoves(String authToken, ChessPosition position) throws IOException {
@@ -73,13 +77,13 @@ public class WebSocketHandler {
         connections.broadcast(authToken, notification);
     }
 
-    public void makeNoise(String petName, String sound) throws Exception {
-        try {
-            var message = String.format("%s says %s", petName, sound);
-            var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-            connections.broadcast("", notification);
-        } catch (Exception ex) {
-            throw new Exception();
-        }
-    }
+//    public void makeNoise(String petName, String sound) throws Exception {
+//        try {
+//            var message = String.format("%s says %s", petName, sound);
+//            var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
+//            connections.broadcast("", notification);
+//        } catch (Exception ex) {
+//            throw new Exception();
+//        }
+//    }
 }
