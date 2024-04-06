@@ -220,6 +220,21 @@ public class MySqlDataAccess implements DataAccess{
             return false;
     }
 
+    public boolean updateChessGame(int gameId, ChessGame game){
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "UPDATE games Set json=? WHERE gameID=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, new Gson().toJson(game));
+                ps.setInt(2, gameId);
+                ps.executeUpdate();
+                return true;
+            }
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
     public void clearGames() throws DataAccessException {
         var statement = "TRUNCATE games";
         executeUpdate(statement);

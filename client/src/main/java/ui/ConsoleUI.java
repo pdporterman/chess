@@ -79,7 +79,7 @@ public class ConsoleUI {
             request.playerColor = null;
             request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
-            printer.displayBoard();
+//            printer.displayBoard();
             return SET_BG_COLOR_BLACK + "observing game";
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";
@@ -95,7 +95,7 @@ public class ConsoleUI {
             request.playerColor = color;
             request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
-            printer.displayBoard();
+//            printer.displayBoard();
             return SET_BG_COLOR_BLACK + "joined game as " + color;
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";

@@ -3,12 +3,14 @@ package server.websocket;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.*;
 import model.Game;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.userCommands.*;
 import webSocketMessages.serverMessages.NotificationMessages;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -35,8 +37,11 @@ public class WebSocketHandler {
         }
     }
 
-    private void joinGame(JoinPlayerCommand command, Session session) throws IOException, DataAccessException {
+    private LoadGameMessage joinGame(JoinPlayerCommand command, Session session) throws IOException, DataAccessException {
         String username = dataAccess.getAuth(command.getAuthString()).getUsername();
+        Game gameContainer = dataAccess.getGame(command.getGameId());
+        ChessGame game =  gameContainer.getGame();
+        LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
         connections.add(command.getAuthString(), username, session);
         String message;
         if (command.getColor() == null){
@@ -47,6 +52,7 @@ public class WebSocketHandler {
         }
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.broadcast(command.getAuthString(), notification);
+        return loadGameMessage;
     }
 
     private void leaveGame(LeaveCommand command) throws IOException, DataAccessException {
@@ -63,12 +69,16 @@ public class WebSocketHandler {
         connections.broadcast(command.getAuthString(), notification);
     }
 
-    private void makeMove(MakeMoveCommand command, ChessMove move) throws IOException, DataAccessException {
+    private LoadGameMessage makeMove(MakeMoveCommand command, ChessMove move) throws IOException, DataAccessException, InvalidMoveException {
+        String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
         Game gameContainer = dataAccess.getGame(command.getGameId());
         ChessGame game =  gameContainer.getGame();
-        var message = String.format("%s left the shop", command.getAuthString());
+        game.makeMove(move);
+        dataAccess.updateChessGame(command.getGameId(), game);
+        var message = String.format("%s made a move", userName);
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.broadcast(command.getAuthString(), notification);
+        return new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
     }
 
     private void HighlightMoves(String authToken, ChessPosition position) throws IOException {
@@ -77,13 +87,5 @@ public class WebSocketHandler {
         connections.broadcast(authToken, notification);
     }
 
-//    public void makeNoise(String petName, String sound) throws Exception {
-//        try {
-//            var message = String.format("%s says %s", petName, sound);
-//            var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-//            connections.broadcast("", notification);
-//        } catch (Exception ex) {
-//            throw new Exception();
-//        }
-//    }
+
 }

@@ -1,6 +1,7 @@
 package dataAccess;
 
 
+import chess.ChessGame;
 import model.*;
 import server.handlers.requests.CreateGameRequest;
 import server.handlers.requests.LoginRequest;
@@ -28,6 +29,8 @@ public interface DataAccess {
     Game addGame(CreateGameRequest request) throws DataAccessException; // games
 
     Game getGame(Integer gameID) throws DataAccessException;
+
+    public boolean updateChessGame(int gameId, ChessGame game);
 
     Collection<Game> getAllGames() throws DataAccessException;
 

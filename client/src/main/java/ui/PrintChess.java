@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 
@@ -26,17 +27,21 @@ public class PrintChess {
 
     }
 
-    public void displayBoard(){
-        ChessPiece[][] board = new ChessGame().getBoard().getBoard();
+    public void displayBoard(ChessGame game, ChessGame.TeamColor color, boolean highlight){
+
+
+        ChessPiece[][] grid = game.getBoard().getBoard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        ChessPiece[][] other = flip(board);
+        if (color == ChessGame.TeamColor.BLACK){
+            ChessPiece[][] other = flip(grid);
+            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other);
+            out.print(CLEAR_BACKGROUND);
+        }
+        else{
+            drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, grid);
+            out.print(CLEAR_BACKGROUND);
+        }
         out.print(ERASE_SCREEN);
-
-        drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, board);
-        out.println(SET_BG_COLOR_BLACK);
-        drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other);
-        out.print(CLEAR_BACKGROUND);
-
     }
 
     public static ChessPiece[][] flip(ChessPiece[][] array) {
