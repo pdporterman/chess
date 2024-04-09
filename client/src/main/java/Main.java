@@ -9,7 +9,7 @@ import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws ResponseException {
         ConsoleUI consoleUI = new ConsoleUI();
         System.out.println("welcome to chess");
         Scanner scanner = new Scanner(System.in);

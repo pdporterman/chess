@@ -7,10 +7,12 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import model.AuthToken;
+import model.Game;
 import server.handlers.requests.*;
 import server.handlers.responses.*;
 import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
+import webSocket.NotificationHandler;
 import webSocket.WebSocketFacade;
 
 public class ConsoleUI {
@@ -20,6 +22,11 @@ public class ConsoleUI {
     private final PrintChess printer = new PrintChess();
     private final ServerFacade server = new ServerFacade();
     private final Scanner scanner = new Scanner(System.in);
+
+    private final WebSocketFacade websocket = new WebSocketFacade("http://localhost:3000", new NotificationHandler());
+
+    public ConsoleUI() throws exception.ResponseException {
+    }
 
     public String login(){
         try {
@@ -95,6 +102,7 @@ public class ConsoleUI {
             request.playerColor = color;
             request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
+            Game game = websocket
 //            printer.displayBoard();
             return SET_BG_COLOR_BLACK + "joined game as " + color;
         } catch (Exception e) {

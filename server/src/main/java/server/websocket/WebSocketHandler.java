@@ -33,16 +33,16 @@ public class WebSocketHandler {
         switch (action.getCommandType()) {
             case JOIN_OBSERVER, JOIN_PLAYER -> joinGame(new Gson().fromJson(message, JoinPlayerCommand.class), session);
             case  LEAVE, RESIGN -> leaveGame(new Gson().fromJson(message, LeaveCommand.class));
-            case MAKE_MOVE -> action = new Gson().fromJson(message, MakeMoveCommand.class);
+            case MAKE_MOVE -> makeMove(new Gson().fromJson(message, MakeMoveCommand.class));
         }
     }
 
-    private LoadGameMessage joinGame(JoinPlayerCommand command, Session session) throws IOException, DataAccessException {
+    private void joinGame(JoinPlayerCommand command, Session session) throws IOException, DataAccessException {
         String username = dataAccess.getAuth(command.getAuthString()).getUsername();
         Game gameContainer = dataAccess.getGame(command.getGameId());
         ChessGame game =  gameContainer.getGame();
-        LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
-        connections.add(command.getAuthString(), username, session);
+        LoadGameMessage loadGameMessage = new LoadGameMessage(game);
+        connections.add(command.getGameId(), session);
         String message;
         if (command.getColor() == null){
             message = String.format("%s is watching the game!", username);
@@ -51,8 +51,7 @@ public class WebSocketHandler {
             message = String.format("%s has joined the game as %s!", username, command.getColor());
         }
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(command.getAuthString(), notification);
-        return loadGameMessage;
+        connections.broadcast(command.getGameId(), notification);
     }
 
     private void leaveGame(LeaveCommand command) throws IOException, DataAccessException {
@@ -66,26 +65,21 @@ public class WebSocketHandler {
             message = String.format("%s left the game, waiting for another player", userName);
         }
         var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(command.getAuthString(), notification);
+        connections.broadcast(command.getGameId(), notification);
     }
 
-    private LoadGameMessage makeMove(MakeMoveCommand command, ChessMove move) throws IOException, DataAccessException, InvalidMoveException {
+    private void makeMove(MakeMoveCommand command) throws IOException, DataAccessException, InvalidMoveException {
         String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
+        ChessMove move = command.getMove();
         Game gameContainer = dataAccess.getGame(command.getGameId());
         ChessGame game =  gameContainer.getGame();
         game.makeMove(move);
         dataAccess.updateChessGame(command.getGameId(), game);
         var message = String.format("%s made a move", userName);
-        var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(command.getAuthString(), notification);
-        return new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
+        var notification = new LoadGameMessage(game);
+        connections.broadcast(command.getGameId(), notification);
     }
 
-    private void HighlightMoves(String authToken, ChessPosition position) throws IOException {
-        var message = String.format("%s left the shop", authToken);
-        var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        connections.broadcast(authToken, notification);
-    }
 
 
 }
