@@ -10,6 +10,8 @@ import java.util.HashSet;
  * signature of the existing methods.
  */
 public class ChessGame {
+
+    private boolean gameOver = false;
     private TeamColor teamColor;
     private ChessBoard board = new ChessBoard();
 
@@ -43,6 +45,14 @@ public class ChessGame {
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+
+    public boolean gameState(){
+        return gameOver;
+    }
+
+    public void fished(){
+        gameOver = true;
     }
 
 

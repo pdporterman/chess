@@ -9,6 +9,7 @@ import model.Game;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.userCommands.*;
 import webSocketMessages.serverMessages.Notification;
@@ -29,53 +30,80 @@ public class WebSocketHandler {
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER, JOIN_PLAYER -> joinGame(new Gson().fromJson(message, JoinPlayerCommand.class), session);
-            case  LEAVE, RESIGN -> leaveGame(new Gson().fromJson(message, LeaveCommand.class), session);
+            case LEAVE, RESIGN -> leaveGame(new Gson().fromJson(message, LeaveCommand.class), session);
             case MAKE_MOVE -> makeMove(new Gson().fromJson(message, MakeMoveCommand.class), session);
         }
     }
 
     private void joinGame(JoinPlayerCommand command, Session session) throws IOException, DataAccessException {
-        String username = dataAccess.getAuth(command.getAuthString()).getUsername();
-        Game gameContainer = dataAccess.getGame(command.getGameId());
-        ChessGame game =  gameContainer.getGame();
-        LoadGameMessage loadGameMessage = new LoadGameMessage(game);
-        connections.add(command.getGameId(), session);
-        String message;
-        if (command.getColor() == null){
-            message = String.format("%s is watching the game!", username);
+        try {
+            String username = dataAccess.getAuth(command.getAuthString()).getUsername();
+            Game gameContainer = dataAccess.getGame(command.getGameId());
+            ChessGame game = gameContainer.getGame();
+            LoadGameMessage loadGameMessage = new LoadGameMessage(game);
+            connections.add(command.getGameId(), session);
+            String message;
+            if (command.getColor() == null) {
+                message = String.format("%s is watching the game!", username);
+            } else {
+                message = String.format("%s has joined the game as %s!", username, command.getColor());
+            }
+            var notification = new Notification(message);
+            connections.broadcast(command.getGameId(), session, notification);
+            connections.broadcast(command.getGameId(), session, loadGameMessage);
+        } catch (Exception e) {
+            var message = "failed to join game";
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage(message)));
+
         }
-        else{
-            message = String.format("%s has joined the game as %s!", username, command.getColor());
-        }
-        var notification = new Notification(message);
-        connections.broadcast(command.getGameId(), session, notification);
-        connections.broadcast(command.getGameId(), session, loadGameMessage);
     }
 
     private void leaveGame(LeaveCommand command, Session session) throws IOException, DataAccessException {
-        String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
-        connections.remove(command.getGameId(), session);
-        String message;
-        if (command.isResign()){
-            message = String.format("%s resigned", userName);
+        try {
+            String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
+            connections.remove(command.getGameId(), session);
+            String message;
+            if (command.isResign()) {
+                message = String.format("%s resigned the game is over!", userName);
+                Game gameContainer = dataAccess.getGame(command.getGameId());
+                ChessGame game = gameContainer.getGame();
+                game.fished();
+                dataAccess.updateChessGame(command.getGameId(), game);
+            } else {
+                message = String.format("%s left the game, waiting for another player", userName);
+            }
+            var notification = new Notification(message);
+            connections.broadcast(command.getGameId(), session, notification);
+        } catch (Exception e) {
+            var message = "failed to disconnect";
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage(message)));
+
         }
-        else{
-            message = String.format("%s left the game, waiting for another player", userName);
-        }
-        var notification = new Notification(message);
-        connections.broadcast(command.getGameId(), session, notification);
+
     }
 
     private void makeMove(MakeMoveCommand command, Session session) throws IOException, DataAccessException, InvalidMoveException {
-        String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
-        ChessMove move = command.getMove();
-        Game gameContainer = dataAccess.getGame(command.getGameId());
-        ChessGame game =  gameContainer.getGame();
-        game.makeMove(move);
-        dataAccess.updateChessGame(command.getGameId(), game);
-        var message = String.format("%s made a move", userName);
-        var notification = new LoadGameMessage(game);
-        connections.broadcast(command.getGameId(), session, notification);
+        try {
+            String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
+            ChessMove move = command.getMove();
+            Game gameContainer = dataAccess.getGame(command.getGameId());
+            ChessGame game = gameContainer.getGame();
+            if (game.gameState()){
+                session.getRemote().sendString(new Gson().toJson(new Notification("game has ended")));
+            }
+            else{
+                game.makeMove(move);
+                dataAccess.updateChessGame(command.getGameId(), game);
+                var message = String.format("%s made a move", userName);
+                var loadGameMessage = new LoadGameMessage(game);
+                var notification = new Notification(message);
+                connections.broadcast(command.getGameId(), session, notification);
+                connections.broadcast(command.getGameId(), session, loadGameMessage);
+            }
+        } catch (Exception e) {
+            var message = "could not make move";
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage(message)));
+        }
     }
 
 

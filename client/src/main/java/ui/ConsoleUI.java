@@ -2,10 +2,13 @@ package ui;
 
 import static ui.EscapeSequences.*;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import server.handlers.requests.*;
 import server.handlers.responses.*;
@@ -90,7 +93,8 @@ public class ConsoleUI implements NotificationHandler {
             request.playerColor = null;
             request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
-//            printer.displayBoard();
+            boardside = ChessGame.TeamColor.WHITE;
+            websocket.joinGame(token, Integer.parseInt(gameid), null);
             return SET_BG_COLOR_BLACK + "observing game";
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";
@@ -114,6 +118,7 @@ public class ConsoleUI implements NotificationHandler {
             return "failed to join game (" + e.toString() + ")";
         }
     }
+
     public String listGame(){
         try {
             ListGamesResponse response = server.listGame(new ListGamesRequest(token));
@@ -136,6 +141,19 @@ public class ConsoleUI implements NotificationHandler {
         }
     }
 
+    public void makeMove(){
+        System.out.print("enter positions with like 'row col'");
+        System.out.print("start position: ");
+        String startString = scanner.next();
+        System.out.print("end position: ");
+        String endString = scanner.next();
+        var list1 = startString.split(" ");
+        var list2 = endString.split(" ");
+
+        ChessPosition start = new ChessPosition(list1[0].charAt(0) - 'a', Integer.parseInt(list1[1]));
+        ChessPosition end = new ChessPosition(list2[0].charAt(0) - 'a', Integer.parseInt(list2[1]));
+        ChessMove move = new ChessMove(start, end);
+    }
 
     public String eval(String input){
         String word = input.toLowerCase();
@@ -200,9 +218,11 @@ public class ConsoleUI implements NotificationHandler {
     }
 
     private void note(Notification message) {
+        System.out.print(message.getMessage());
     }
 
     private void handleError(ErrorMessage message) {
+        System.out.print(message.getErrorMessage());
     }
 
     private void loadGame(LoadGameMessage message) {
