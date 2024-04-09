@@ -3,7 +3,6 @@ package server.websocket;
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 
-import webSocketMessages.serverMessages.NotificationMessages;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import java.io.IOException;
@@ -22,8 +21,9 @@ public class ConnectionManager {
         list.add(session);
     }
 
-    public void remove(String authtoken) {
-        connections.remove(authtoken);
+    public void remove(int gameId, Session session) {
+        var cons = connections.get(gameId);
+        cons.remove(session);
     }
 
     public void broadcast(int gameId, Session session, ServerMessage notification) throws IOException {

@@ -1,9 +1,8 @@
 package webSocket;
 
-import webSocketMessages.serverMessages.NotificationMessages;
-import ui.EscapeSequences;
+import webSocketMessages.serverMessages.ServerMessage;
 
 public interface NotificationHandler {
-    public void notify(NotificationMessages notification);
+    public void notify(String message);
 
 }

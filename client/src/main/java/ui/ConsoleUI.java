@@ -2,26 +2,26 @@ package ui;
 
 import static ui.EscapeSequences.*;
 
-import java.net.MalformedURLException;
 import java.util.Objects;
 import java.util.Scanner;
 
 import chess.ChessGame;
-import model.AuthToken;
-import model.Game;
+import com.google.gson.Gson;
 import server.handlers.requests.*;
 import server.handlers.responses.*;
 import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
 import webSocket.NotificationHandler;
 import webSocket.WebSocketFacade;
-import webSocketMessages.serverMessages.NotificationMessages;
-import webSocketMessages.userCommands.JoinPlayerCommand;
+import webSocketMessages.serverMessages.ErrorMessage;
+import webSocketMessages.serverMessages.LoadGameMessage;
+import webSocketMessages.serverMessages.Notification;
+import webSocketMessages.serverMessages.ServerMessage;
 
 public class ConsoleUI implements NotificationHandler {
     private String token = null;
 
-    private String playerColor = null;
+    private ChessGame.TeamColor boardside = null;
     private ChessGame game = null;
     private final PrintChess printer = new PrintChess();
     private final ServerFacade server = new ServerFacade();
@@ -96,6 +96,7 @@ public class ConsoleUI implements NotificationHandler {
             return "failed to join game (" + e.toString() + ")";
         }
     }
+
     public String joinGame(){
         try {
             System.out.print("please enter a gameID number: ");
@@ -104,11 +105,10 @@ public class ConsoleUI implements NotificationHandler {
             String color = scanner.next();
             JoinGameRequest request = new JoinGameRequest(Integer.parseInt(gameid));
             request.playerColor = color;
-            playerColor = color;
             request.setAuthorization(token);
+            boardside = (Objects.equals(color, "BLACK")) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
             JoinGameResponse response = server.joinGame(request);
-            websocket.joinGame(new JoinPlayerCommand(token, gameid, playerColor));
-//            printer.displayBoard();
+            websocket.joinGame(token, Integer.parseInt(gameid), boardside);
             return SET_BG_COLOR_BLACK + "joined game as " + color;
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";
@@ -190,7 +190,23 @@ public class ConsoleUI implements NotificationHandler {
     }
 
     @Override
-    public void notify(NotificationMessages notification) {
-        System.out.println(notification.getMessage());
+    public void notify(String message){
+        ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
+        switch (notification.getServerMessageType()){
+            case LOAD_GAME -> loadGame((new Gson().fromJson(message, LoadGameMessage.class)));
+            case ERROR -> handleError((new Gson().fromJson(message, ErrorMessage.class)));
+            case NOTIFICATION -> note((new Gson().fromJson(message, Notification.class)));
+        }
+    }
+
+    private void note(Notification message) {
+    }
+
+    private void handleError(ErrorMessage message) {
+    }
+
+    private void loadGame(LoadGameMessage message) {
+        game = message.getGame();
+        printer.displayBoard(game, boardside, false);
     }
 }
