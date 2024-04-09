@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.util.Objects;
 import java.util.Scanner;
 
+import chess.ChessGame;
 import model.AuthToken;
 import model.Game;
 import server.handlers.requests.*;
@@ -14,16 +15,19 @@ import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
 import webSocket.NotificationHandler;
 import webSocket.WebSocketFacade;
+import webSocketMessages.serverMessages.NotificationMessages;
+import webSocketMessages.userCommands.JoinPlayerCommand;
 
-public class ConsoleUI {
+public class ConsoleUI implements NotificationHandler {
     private String token = null;
 
-    private String game = null;
+    private String playerColor = null;
+    private ChessGame game = null;
     private final PrintChess printer = new PrintChess();
     private final ServerFacade server = new ServerFacade();
     private final Scanner scanner = new Scanner(System.in);
 
-    private final WebSocketFacade websocket = new WebSocketFacade("http://localhost:3000", new NotificationHandler());
+    private final WebSocketFacade websocket = new WebSocketFacade("http://localhost:3000", this);
 
     public ConsoleUI() throws exception.ResponseException {
     }
@@ -100,9 +104,10 @@ public class ConsoleUI {
             String color = scanner.next();
             JoinGameRequest request = new JoinGameRequest(Integer.parseInt(gameid));
             request.playerColor = color;
+            playerColor = color;
             request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
-            Game game = websocket
+            websocket.joinGame(new JoinPlayerCommand(token, gameid, playerColor));
 //            printer.displayBoard();
             return SET_BG_COLOR_BLACK + "joined game as " + color;
         } catch (Exception e) {
@@ -184,4 +189,8 @@ public class ConsoleUI {
 
     }
 
+    @Override
+    public void notify(NotificationMessages notification) {
+        System.out.println(notification.getMessage());
+    }
 }

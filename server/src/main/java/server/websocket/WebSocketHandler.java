@@ -28,7 +28,7 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException, DataAccessException {
+    public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException {
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER, JOIN_PLAYER -> joinGame(new Gson().fromJson(message, JoinPlayerCommand.class), session);
@@ -50,7 +50,7 @@ public class WebSocketHandler {
         else{
             message = String.format("%s has joined the game as %s!", username, command.getColor());
         }
-        var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
+        var notification = new NotificationMessages(message);
         connections.broadcast(command.getGameId(), notification);
     }
 
@@ -59,12 +59,12 @@ public class WebSocketHandler {
         connections.remove(command.getAuthString());
         String message;
         if (command.isResign()){
-            message = String.format("%s resigns!", userName);
+            message = String.format("%s resigned", userName);
         }
         else{
             message = String.format("%s left the game, waiting for another player", userName);
         }
-        var notification = new NotificationMessages(ServerMessage.ServerMessageType.NOTIFICATION, message);
+        var notification = new NotificationMessages(message);
         connections.broadcast(command.getGameId(), notification);
     }
 

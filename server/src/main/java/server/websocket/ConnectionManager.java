@@ -26,22 +26,17 @@ public class ConnectionManager {
         connections.remove(authtoken);
     }
 
-    public void broadcast(int gameId, ServerMessage notification) throws IOException {
+    public void broadcast(int gameId, Session session, ServerMessage notification) throws IOException {
         var removeList = new ArrayList<>();
         var cons = connections.get(gameId);
         for (var sesh : cons) {
             if (sesh.isOpen()) {
-//                if (!c.authtoken.equals(authtoken)) {
-//                    c.send(new Gson().toJson(notification));
-//                }
+                if (!sesh.equals(session)) {
+                    session.getRemote().sendString(new Gson().toJson(notification));
+                }
             } else {
-                removeList.add(sesh);
+                cons.remove(sesh);
             }
-        }
-
-        // Clean up any connections that were left open.
-        for (var c : removeList) {
-            connections.remove(c);
         }
     }
 
