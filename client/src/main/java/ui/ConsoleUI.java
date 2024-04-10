@@ -6,9 +6,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
 
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
 import com.google.gson.Gson;
 import server.handlers.requests.*;
 import server.handlers.responses.*;
@@ -26,6 +24,12 @@ public class ConsoleUI implements NotificationHandler {
 
     private ChessGame.TeamColor boardside = null;
     private ChessGame game = null;
+
+    private String role = null;
+    private Integer gameNumber = null;
+
+
+
     private final PrintChess printer = new PrintChess();
     private final ServerFacade server = new ServerFacade();
     private final Scanner scanner = new Scanner(System.in);
@@ -85,6 +89,8 @@ public class ConsoleUI implements NotificationHandler {
             return "failed to create game (" + e.toString() + ")";
         }
     }
+
+
     private String observeGame() {
         try {
             System.out.print("please enter a gameID number: ");
@@ -95,6 +101,8 @@ public class ConsoleUI implements NotificationHandler {
             JoinGameResponse response = server.joinGame(request);
             boardside = ChessGame.TeamColor.WHITE;
             websocket.joinGame(token, Integer.parseInt(gameid), null);
+            gameNumber = Integer.parseInt(gameid);
+            role = "observer";
             return SET_BG_COLOR_BLACK + "observing game";
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";
@@ -113,11 +121,50 @@ public class ConsoleUI implements NotificationHandler {
             boardside = (Objects.equals(color, "BLACK")) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
             JoinGameResponse response = server.joinGame(request);
             websocket.joinGame(token, Integer.parseInt(gameid), boardside);
+            gameNumber = Integer.parseInt(gameid);
+            role = "player";
             return SET_BG_COLOR_BLACK + "joined game as " + color;
         } catch (Exception e) {
             return "failed to join game (" + e.toString() + ")";
         }
     }
+    public String leaveGame(){
+        try {
+            System.out.print("Leave the game (Y/N): ");
+            String confirm = scanner.next();
+            if (Objects.equals(confirm, "Y")){
+                websocket.leaveGame(token, gameNumber);
+                return "left game";
+            }
+            else {
+                return "canceled";
+            }
+        } catch (exception.ResponseException e) {
+            return "failed to leave game";
+        }
+    }
+    public String resignGame(){
+        try {
+            System.out.print("Resign the game (Y/N): ");
+            String confirm = scanner.next();
+            if (Objects.equals(confirm, "Y")){
+                websocket.resign(token, gameNumber);
+                return "left game";
+            }
+            else {
+                return "canceled";
+            }
+        } catch (exception.ResponseException e) {
+            return "failed to leave game";
+        }
+    }
+
+    public String redraw(){
+        printer.displayBoard(game, boardside, false);
+        return "here is the board";
+    }
+
+
 
     public String listGame(){
         try {
@@ -141,19 +188,65 @@ public class ConsoleUI implements NotificationHandler {
         }
     }
 
-    public void makeMove(){
-        System.out.print("enter positions with like 'row col'");
-        System.out.print("start position: ");
-        String startString = scanner.next();
-        System.out.print("end position: ");
-        String endString = scanner.next();
-        var list1 = startString.split(" ");
-        var list2 = endString.split(" ");
 
-        ChessPosition start = new ChessPosition(list1[0].charAt(0) - 'a', Integer.parseInt(list1[1]));
-        ChessPosition end = new ChessPosition(list2[0].charAt(0) - 'a', Integer.parseInt(list2[1]));
-        ChessMove move = new ChessMove(start, end);
+
+    public String makeMove(){
+        try {
+            System.out.print("enter position 'row col'");
+            System.out.print("start position: ");
+            String startString = scanner.next();
+            var list1 = startString.split(" ");
+            if (list1.length != 2){
+                return "invalid start position";
+            }
+            ChessPosition start = new ChessPosition(list1[0].charAt(0) - 'a', Integer.parseInt(list1[1]));
+            ChessPiece peice = game.getBoard().getPiece(start);
+            if (peice == null || peice.getTeamColor() != boardside){
+                return "no team peice";
+            }
+            System.out.print("end position: ");
+            String endString = scanner.next();
+            var list2 = endString.split(" ");
+            if (list2.length != 2){
+                return "invalid end position";
+            }
+            ChessPiece.PieceType promotion = null;
+            if (peice.getPieceType() == ChessPiece.PieceType.PAWN && list2[0].charAt(0) - 'a' == 8){
+                System.out.print("promote to which piece?\nQ : queen\nK : kight\nB : bishop\nR : rook");
+                String pro = scanner.next();
+                promotion = proType(pro);
+                if (promotion == null){
+                    return "cannot promote to" + pro;
+                }
+            }
+            ChessPosition end = new ChessPosition(list2[0].charAt(0) - 'a', Integer.parseInt(list2[1]));
+            ChessMove move = new ChessMove(start, end, promotion);
+            game.makeMove(move);
+            websocket.makeMove(token, gameNumber, move);
+            return "move successful";
+        } catch (NumberFormatException e) {
+            return "could not use position";
+        } catch (InvalidMoveException e) {
+            return "not a valid move";
+        } catch (exception.ResponseException e) {
+            return "error reaching server";
+        }
     }
+    private ChessPiece.PieceType proType(String pro) {
+        return switch (pro) {
+            case "Q" -> ChessPiece.PieceType.QUEEN;
+            case "R" -> ChessPiece.PieceType.ROOK;
+            case "B" -> ChessPiece.PieceType.BISHOP;
+            case "K" -> ChessPiece.PieceType.KNIGHT;
+            default -> null;
+        };
+    }
+
+
+
+
+
+
 
     public String eval(String input){
         String word = input.toLowerCase();
@@ -168,6 +261,10 @@ public class ConsoleUI implements NotificationHandler {
             case "clear" -> clear();
             case "quit" -> "good bye";
             case "help" -> "just type out the action you wish to take, for example to log in type 'login'";
+            case "redraw board" -> redraw();
+            case "make move" -> makeMove();
+            case "leave" -> leaveGame();
+            case "resign" -> resignGame();
             default -> "invalid input, please enter response matching available options";
         };
     }
@@ -183,12 +280,19 @@ public class ConsoleUI implements NotificationHandler {
                     - quit
                     """;
         }
-        else if (game != null){
+        else if (game != null && Objects.equals(role, "player")){
             return SET_BG_COLOR_DARK_GREY + """
                 - make move
                 - highlight moves
                 - redraw board
                 - resign
+                - leave
+                - help
+                """;
+        }
+        else if (game != null && Objects.equals(role, "observer")){
+            return SET_BG_COLOR_DARK_GREY + """
+                - redraw board
                 - leave
                 - help
                 """;

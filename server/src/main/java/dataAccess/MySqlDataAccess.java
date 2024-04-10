@@ -285,4 +285,31 @@ public class MySqlDataAccess implements DataAccess{
         game.setGame(new Gson().fromJson(rs.getString("json"), ChessGame.class));
         return game;
     }
+
+    public boolean removePlayer(int gameId, String userName){
+        try (var conn = DatabaseManager.getConnection()) {
+            Game game = getGame(gameId);
+            if (Objects.equals(userName, game.getBlackUsername()) || Objects.equals(userName, game.getWhiteUsername())) {
+                var statement = "";
+                if (Objects.equals(userName, game.getBlackUsername())) {
+                    statement = "UPDATE games Set blackUsername=? WHERE gameID=?";
+                }
+                else if (Objects.equals(userName, game.getWhiteUsername())) {
+                    statement = "UPDATE games Set whiteUsername=? WHERE gameID=?";
+                }
+
+                try (var ps = conn.prepareStatement(statement)) {
+                    ps.setString(1, null);
+                    ps.setInt(2, gameId);
+                    ps.executeUpdate();
+                    return true;
+                }
+            }
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
 }

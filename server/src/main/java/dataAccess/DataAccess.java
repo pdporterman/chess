@@ -39,4 +39,5 @@ public interface DataAccess {
     void clearGames() throws DataAccessException;
 
 
+    boolean removePlayer(int gameId, String userName);
 }

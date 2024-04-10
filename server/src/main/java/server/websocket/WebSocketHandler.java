@@ -61,19 +61,22 @@ public class WebSocketHandler {
     private void leaveGame(LeaveCommand command, Session session) throws IOException, DataAccessException {
         try {
             String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
-            connections.remove(command.getGameId(), session);
-            String message;
-            if (command.isResign()) {
-                message = String.format("%s resigned the game is over!", userName);
-                Game gameContainer = dataAccess.getGame(command.getGameId());
-                ChessGame game = gameContainer.getGame();
-                game.fished();
-                dataAccess.updateChessGame(command.getGameId(), game);
-            } else {
-                message = String.format("%s left the game, waiting for another player", userName);
+            if (dataAccess.removePlayer(command.getGameId(),userName)) {
+                connections.remove(command.getGameId(), session);
+                String message;
+                if (command.isResign()) {
+                    message = String.format("%s resigned the game is over!", userName);
+                    Game gameContainer = dataAccess.getGame(command.getGameId());
+                    ChessGame game = gameContainer.getGame();
+                    game.fished();
+                    dataAccess.updateChessGame(command.getGameId(), game);
+
+                } else {
+                    message = String.format("%s left the game, waiting for another player", userName);
+                }
+                var notification = new Notification(message);
+                connections.broadcast(command.getGameId(), session, notification);
             }
-            var notification = new Notification(message);
-            connections.broadcast(command.getGameId(), session, notification);
         } catch (Exception e) {
             var message = "failed to disconnect";
             session.getRemote().sendString(new Gson().toJson(new ErrorMessage(message)));
