@@ -3,6 +3,8 @@ package dataAccess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+
+import chess.ChessGame;
 import model.*;
 import server.handlers.requests.CreateGameRequest;
 import server.handlers.requests.LoginRequest;
@@ -77,6 +79,11 @@ public class MemoryDataAccess implements DataAccess {
         return null;
     }
 
+    @Override
+    public boolean updateChessGame(int gameId, ChessGame game) {
+        return false;
+    }
+
     public Game addGame(CreateGameRequest request){
         Game newGame = new Game(nextGameID++, request.getGameName());
         games.add(newGame);
@@ -104,5 +111,10 @@ public class MemoryDataAccess implements DataAccess {
 
     public void clearGames(){
         games.clear();
+    }
+
+    @Override
+    public boolean removePlayer(int gameId, String userName) {
+        return false;
     }
 }
