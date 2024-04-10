@@ -2,7 +2,6 @@ package ui;
 
 import static ui.EscapeSequences.*;
 
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -14,8 +13,8 @@ import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
 import webSocket.NotificationHandler;
 import webSocket.WebSocketFacade;
-import webSocketMessages.serverMessages.ErrorMessage;
-import webSocketMessages.serverMessages.LoadGameMessage;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 
@@ -160,7 +159,7 @@ public class ConsoleUI implements NotificationHandler {
     }
 
     public String redraw(){
-        printer.displayBoard(game, boardside, false);
+        printer.displayBoard(game, boardside, false, null);
         return "here is the board";
     }
 
@@ -265,10 +264,23 @@ public class ConsoleUI implements NotificationHandler {
             case "make move" -> makeMove();
             case "leave" -> leaveGame();
             case "resign" -> resignGame();
+            case "highlight moves" -> highlight();
             default -> "invalid input, please enter response matching available options";
         };
     }
 
+    private String highlight(){
+        System.out.print("enter piece position 'row col'");
+        System.out.print("position: ");
+        String string = scanner.next();
+        var list = string.split(" ");
+        if (list.length != 2){
+            return "invalid start position";
+        }
+        ChessPosition pos = new ChessPosition(list[0].charAt(0) - 'a', Integer.parseInt(list[1]));
+        printer.displayBoard(game, boardside, true, pos);
+        return "highlighted board";
+    }
 
 
     public String menu() {
@@ -315,8 +327,8 @@ public class ConsoleUI implements NotificationHandler {
     public void notify(String message){
         ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
         switch (notification.getServerMessageType()){
-            case LOAD_GAME -> loadGame((new Gson().fromJson(message, LoadGameMessage.class)));
-            case ERROR -> handleError((new Gson().fromJson(message, ErrorMessage.class)));
+            case LOAD_GAME -> loadGame((new Gson().fromJson(message, LoadGame.class)));
+            case ERROR -> handleError((new Gson().fromJson(message, Error.class)));
             case NOTIFICATION -> note((new Gson().fromJson(message, Notification.class)));
         }
     }
@@ -325,12 +337,12 @@ public class ConsoleUI implements NotificationHandler {
         System.out.print(message.getMessage());
     }
 
-    private void handleError(ErrorMessage message) {
+    private void handleError(Error message) {
         System.out.print(message.getErrorMessage());
     }
 
-    private void loadGame(LoadGameMessage message) {
+    private void loadGame(LoadGame message) {
         game = message.getGame();
-        printer.displayBoard(game, boardside, false);
+        printer.displayBoard(game, boardside, false, null);
     }
 }

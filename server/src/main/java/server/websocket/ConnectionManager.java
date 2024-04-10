@@ -26,17 +26,20 @@ public class ConnectionManager {
         cons.remove(session);
     }
 
-    public void broadcast(int gameId, Session session, ServerMessage notification) throws IOException {
+    public void broadcast(int gameId, Session session, String notification) throws IOException {
         var removeList = new ArrayList<>();
         var cons = connections.get(gameId);
         for (var sesh : cons) {
             if (sesh.isOpen()) {
                 if (!sesh.equals(session)) {
-                    session.getRemote().sendString(new Gson().toJson(notification));
+                    session.getRemote().sendString(notification);
                 }
             } else {
-                cons.remove(sesh);
+                removeList.add(sesh);
             }
+        }
+        for (var con : removeList) {
+            cons.remove(con);
         }
     }
 

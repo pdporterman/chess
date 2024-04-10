@@ -28,7 +28,7 @@ public class Server {
     public Server(){
         try {
             this.da = new MySqlDataAccess();
-            this.webSocketHandler = new WebSocketHandler();
+            this.webSocketHandler = new WebSocketHandler(da);
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
@@ -48,6 +48,7 @@ public class Server {
     }
 
     public int run(int desiredPort) {
+        System.out.println("start");
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
@@ -66,6 +67,7 @@ public class Server {
         Spark.delete("/db",this::clear);//clear
 
         Spark.awaitInitialization();
+        System.out.println("port");
         return Spark.port();
     }
 

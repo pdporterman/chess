@@ -3,6 +3,7 @@ package ui;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
+import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -27,12 +28,14 @@ public class PrintChess {
 
     }
 
-    public void displayBoard(ChessGame game, ChessGame.TeamColor color, boolean highlight){
-
+    public void displayBoard(ChessGame game, ChessGame.TeamColor color, boolean highlight, ChessPosition pos){
 
         ChessPiece[][] grid = game.getBoard().getBoard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        if (color == ChessGame.TeamColor.BLACK){
+        int[][] highlights = null;
+        if (highlight){
+            highlights = highlightGrid(game,grid, pos);
+        }        if (color == ChessGame.TeamColor.BLACK){
             ChessPiece[][] other = flip(grid);
             drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other);
             out.print(CLEAR_BACKGROUND);
@@ -42,6 +45,25 @@ public class PrintChess {
             out.print(CLEAR_BACKGROUND);
         }
         out.print(ERASE_SCREEN);
+    }
+
+    private int[][] highlightGrid(ChessGame game, ChessPiece[][] grid, ChessPosition pos) {
+        int[][] highlights = new int[8][8];
+        var moves = game.validMoves(pos);
+        for (int i = 0; i < grid.length; i++){
+            for (int j = 0; j < grid[0].length; j++){
+                ChessPosition temp = new ChessPosition(i,j);
+                for (var move : moves){
+                    if (pos.equals(temp)){
+                        highlights[i][j] = 2;
+                    }
+                    else if (move.getEndPosition().equals(temp)){
+                        highlights[i][j] = 1;
+                    }
+                }
+            }
+        }
+        return highlights;
     }
 
     public static ChessPiece[][] flip(ChessPiece[][] array) {
