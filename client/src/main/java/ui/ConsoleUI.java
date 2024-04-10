@@ -100,7 +100,7 @@ public class ConsoleUI implements NotificationHandler {
             request.setAuthorization(token);
             JoinGameResponse response = server.joinGame(request);
             boardside = ChessGame.TeamColor.WHITE;
-            websocket.joinGame(token, Integer.parseInt(gameid), null);
+            websocket.observeGame(token, Integer.parseInt(gameid));
             gameNumber = Integer.parseInt(gameid);
             role = "observer";
             return SET_BG_COLOR_BLACK + "observing game";

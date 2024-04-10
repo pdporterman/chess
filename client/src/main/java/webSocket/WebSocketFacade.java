@@ -9,10 +9,7 @@ import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.JoinPlayerCommand;
-import webSocketMessages.userCommands.LeaveCommand;
-import webSocketMessages.userCommands.MakeMoveCommand;
-import webSocketMessages.userCommands.ResignCommand;
+import webSocketMessages.userCommands.*;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -60,9 +57,9 @@ public class WebSocketFacade extends Endpoint{
         }
     }
 
-    public void observeGame(String authtoken, int gameid, ChessGame.TeamColor color) throws ResponseException {
+    public void observeGame(String authtoken, int gameid) throws ResponseException {
         try {
-            var action = new JoinPlayerCommand(authtoken, gameid, null);
+            var action = new JoinObserverCommand(authtoken, gameid);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {
             throw new ResponseException(500, ex.getMessage());
