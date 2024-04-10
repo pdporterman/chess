@@ -12,6 +12,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.LeaveCommand;
 import webSocketMessages.userCommands.MakeMoveCommand;
+import webSocketMessages.userCommands.ResignCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class WebSocketFacade extends Endpoint{
 
     public void leaveGame(String authtoken, int gameId) throws ResponseException {
         try {
-            var action = new LeaveCommand(authtoken, gameId, false);
+            var action = new LeaveCommand(authtoken, gameId);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
             this.session.close();
         } catch (IOException ex) {
@@ -80,7 +81,7 @@ public class WebSocketFacade extends Endpoint{
 
     public void resign(String authtoken, int gameId) throws ResponseException {
         try {
-            var action = new LeaveCommand(authtoken, gameId, true);
+            var action = new ResignCommand(authtoken,gameId);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
             this.session.close();
         } catch (IOException ex) {

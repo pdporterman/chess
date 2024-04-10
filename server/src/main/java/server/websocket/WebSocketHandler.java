@@ -30,7 +30,8 @@ public class WebSocketHandler {
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER, JOIN_PLAYER -> joinGame(new Gson().fromJson(message, JoinPlayerCommand.class), session);
-            case LEAVE, RESIGN -> leaveGame(new Gson().fromJson(message, LeaveCommand.class), session);
+            case LEAVE-> leaveGame(new Gson().fromJson(message, LeaveCommand.class), session);
+            case RESIGN -> resignGame(new Gson().fromJson(message, ResignCommand.class), session);
             case MAKE_MOVE -> makeMove(new Gson().fromJson(message, MakeMoveCommand.class), session);
         }
     }
@@ -58,22 +59,17 @@ public class WebSocketHandler {
         }
     }
 
-    private void leaveGame(LeaveCommand command, Session session) throws IOException, DataAccessException {
+    private void resignGame(ResignCommand command, Session session) throws IOException {
         try {
             String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
             if (dataAccess.removePlayer(command.getGameId(),userName)) {
                 connections.remove(command.getGameId(), session);
                 String message;
-                if (command.isResign()) {
-                    message = String.format("%s resigned the game is over!", userName);
-                    Game gameContainer = dataAccess.getGame(command.getGameId());
-                    ChessGame game = gameContainer.getGame();
-                    game.fished();
-                    dataAccess.updateChessGame(command.getGameId(), game);
-
-                } else {
-                    message = String.format("%s left the game, waiting for another player", userName);
-                }
+                message = String.format("%s resigned the game is over!", userName);
+                Game gameContainer = dataAccess.getGame(command.getGameId());
+                ChessGame game = gameContainer.getGame();
+                game.fished();
+                dataAccess.updateChessGame(command.getGameId(), game);
                 var notification = new Notification(message);
                 connections.broadcast(command.getGameId(), session, notification);
             }
@@ -81,6 +77,21 @@ public class WebSocketHandler {
             var message = "failed to disconnect";
             session.getRemote().sendString(new Gson().toJson(new ErrorMessage(message)));
 
+        }
+
+    }
+
+    private void leaveGame(LeaveCommand command, Session session) throws IOException, DataAccessException {
+        try {
+            String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
+            if (dataAccess.removePlayer(command.getGameId(),userName)) {
+                var message = String.format("%s left the game", userName);
+                var notification = new Notification(message);
+                connections.broadcast(command.getGameId(), session, notification);
+            }
+        } catch (Exception e) {
+            var message = "failed to disconnect";
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage(message)));
         }
 
     }
