@@ -6,9 +6,7 @@ import java.util.Objects;
 
 import chess.ChessGame;
 import model.*;
-import server.handlers.requests.CreateGameRequest;
-import server.handlers.requests.LoginRequest;
-import server.handlers.requests.RegisterRequest;
+import handlers.requests.CreateGameRequest;
 
 public class MemoryDataAccess implements DataAccess {
     ArrayList<Game> games = new ArrayList<>();

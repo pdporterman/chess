@@ -4,12 +4,12 @@ import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.User;
-import server.handlers.requests.LoginRequest;
-import server.handlers.requests.LogoutRequest;
-import server.handlers.requests.RegisterRequest;
-import server.handlers.responses.LoginResponse;
-import server.handlers.responses.LogoutResponse;
-import server.handlers.responses.RegisterResponse;
+import handlers.requests.LoginRequest;
+import handlers.requests.LogoutRequest;
+import handlers.requests.RegisterRequest;
+import handlers.responses.LoginResponse;
+import handlers.responses.LogoutResponse;
+import handlers.responses.RegisterResponse;
 
 import java.util.Objects;
 

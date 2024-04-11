@@ -1,4 +1,4 @@
-package server.handlers.responses;
+package handlers.responses;
 
 public class LogoutResponse {
     String message;

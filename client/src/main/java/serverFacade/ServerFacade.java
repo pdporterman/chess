@@ -1,7 +1,7 @@
 package serverFacade;
 
-import server.handlers.requests.*;
-import server.handlers.responses.*;
+import handlers.requests.*;
+import handlers.responses.*;
 
 public class ServerFacade {
 
@@ -32,7 +32,7 @@ public class ServerFacade {
         return communicator.makeRequest("PUT", path, request, JoinGameResponse.class, request.getAuthorization());
     }
 
-    public ListGamesResponse listGame(ListGamesRequest  request) throws ResponseException {
+    public ListGamesResponse listGame(ListGamesRequest request) throws ResponseException {
         var path = "/game";
         return communicator.makeRequest("GET", path, request, ListGamesResponse.class, request.getAuthorization());
     }

@@ -3,9 +3,7 @@ package dataAccess;
 
 import chess.ChessGame;
 import model.*;
-import server.handlers.requests.CreateGameRequest;
-import server.handlers.requests.LoginRequest;
-import server.handlers.requests.RegisterRequest;
+import handlers.requests.CreateGameRequest;
 
 import java.util.Collection;
 

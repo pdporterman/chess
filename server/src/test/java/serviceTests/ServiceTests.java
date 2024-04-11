@@ -2,15 +2,13 @@ package serviceTests;
 
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import dataAccess.MemoryDataAccess;
 import dataAccess.MySqlDataAccess;
+import handlers.requests.*;
+import handlers.responses.*;
 import model.AuthToken;
-import model.Game;
 import model.User;
 import org.junit.jupiter.api.*;
 import passoffTests.testClasses.TestException;
-import server.handlers.requests.*;
-import server.handlers.responses.*;
 import service.ClearService;
 import service.GameService;
 import service.UserService;

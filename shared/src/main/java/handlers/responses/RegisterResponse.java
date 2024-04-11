@@ -1,4 +1,4 @@
-package server.handlers.responses;
+package handlers.responses;
 
 import model.AuthToken;
 import model.User;

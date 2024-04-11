@@ -3,14 +3,13 @@ package service;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.*;
-import server.handlers.requests.CreateGameRequest;
-import server.handlers.requests.JoinGameRequest;
-import server.handlers.requests.ListGamesRequest;
-import server.handlers.responses.CreateGameResponse;
-import server.handlers.responses.JoinGameResponse;
-import server.handlers.responses.ListGamesResponse;
+import handlers.requests.CreateGameRequest;
+import handlers.requests.JoinGameRequest;
+import handlers.requests.ListGamesRequest;
+import handlers.responses.CreateGameResponse;
+import handlers.responses.JoinGameResponse;
+import handlers.responses.ListGamesResponse;
 
-import java.util.Collection;
 import java.util.Objects;
 
 public class GameService {

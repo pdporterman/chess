@@ -1,11 +1,11 @@
-package server.handlers.requests;
+package handlers.requests;
 
 import model.AuthToken;
 
-public class LogoutRequest {
+public class ListGamesRequest {
     String authorization;
 
-    public LogoutRequest(String auth){
+    public ListGamesRequest(String auth){
         this.authorization = auth;
     }
 

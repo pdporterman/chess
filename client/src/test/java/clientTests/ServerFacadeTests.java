@@ -1,14 +1,12 @@
 package clientTests;
 
-import dataAccess.DataAccessException;
+import handlers.requests.*;
+import handlers.responses.*;
 import org.junit.jupiter.api.*;
 import server.Server;
-import server.handlers.requests.*;
-import server.handlers.responses.*;
 import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 

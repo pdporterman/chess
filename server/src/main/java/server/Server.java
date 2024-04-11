@@ -3,18 +3,14 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import dataAccess.MemoryDataAccess;
 import dataAccess.MySqlDataAccess;
-import model.Game;
-import server.handlers.requests.*;
-import server.handlers.responses.*;
+import handlers.requests.*;
+import handlers.responses.*;
 import server.websocket.WebSocketHandler;
 import service.ClearService;
 import service.GameService;
 import service.UserService;
 import spark.*;
-
-import java.util.Collection;
 
 public class Server {
 

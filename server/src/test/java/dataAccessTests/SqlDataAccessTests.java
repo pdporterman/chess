@@ -8,7 +8,7 @@ import model.Game;
 import model.User;
 import org.junit.jupiter.api.*;
 import passoffTests.testClasses.TestException;
-import server.handlers.requests.CreateGameRequest;
+import handlers.requests.CreateGameRequest;
 
 import java.util.Collection;
 

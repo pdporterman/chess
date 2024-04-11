@@ -6,7 +6,7 @@ import model.AuthToken;
 import model.Game;
 import model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import server.handlers.requests.CreateGameRequest;
+import handlers.requests.CreateGameRequest;
 
 import java.sql.*;
 import java.util.ArrayList;

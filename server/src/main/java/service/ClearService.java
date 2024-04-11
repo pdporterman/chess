@@ -2,7 +2,7 @@ package service;
 
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import server.handlers.responses.ClearResponse;
+import handlers.responses.ClearResponse;
 
 public class ClearService {
 

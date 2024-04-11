@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 import chess.*;
 import com.google.gson.Gson;
-import server.handlers.requests.*;
-import server.handlers.responses.*;
+import handlers.requests.*;
+import handlers.responses.*;
 import serverFacade.ResponseException;
 import serverFacade.ServerFacade;
 import webSocket.NotificationHandler;
