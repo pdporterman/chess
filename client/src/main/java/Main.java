@@ -1,9 +1,6 @@
-import chess.*;
 import exception.ResponseException;
-import serverFacade.ServerFacade;
 import ui.*;
 
-import java.net.MalformedURLException;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;

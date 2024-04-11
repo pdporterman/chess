@@ -149,8 +149,17 @@ public class WebSocketHandler {
                 session.getRemote().sendString(new Gson().toJson(new Error("not BLACK's turn")));
             }
             else {
+                var winner = (game.getTeamTurn() == ChessGame.TeamColor.WHITE) ? "White" : "Black";
                 game.makeMove(move);
                 dataAccess.updateChessGame(command.getGameId(), game);
+                if (game.isInCheck(game.getTeamTurn())){
+                    var check = new Notification(String.format("%s has won! the game is over ", userName));
+                    connections.broadcast(command.getGameId(), null, new Gson().toJson(check));
+                }
+                if (game.isInStalemate(game.getTeamTurn())){
+                    var check = new Notification("the game has reached a stailmate and is over");
+                    connections.broadcast(command.getGameId(), null, new Gson().toJson(check));
+                }
                 var message = String.format("%s made a move", userName);
                 var loadGameMessage = new LoadGame(game);
                 var notification = new Notification(message);
