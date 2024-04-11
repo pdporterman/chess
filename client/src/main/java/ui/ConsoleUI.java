@@ -334,11 +334,11 @@ public class ConsoleUI implements NotificationHandler {
     }
 
     private void note(Notification message) {
-        System.out.print(message.getMessage());
+        System.out.print(message.getMessage() + "\n");
     }
 
     private void handleError(Error message) {
-        System.out.print(message.getErrorMessage());
+        System.out.print(message.getErrorMessage() + '\n');
     }
 
     private void loadGame(LoadGame message) {

@@ -16,6 +16,7 @@ import webSocketMessages.serverMessages.Notification;
 
 
 import java.io.IOException;
+import java.util.Objects;
 
 @WebSocket
 public class WebSocketHandler {
@@ -61,6 +62,12 @@ public class WebSocketHandler {
         try {
             String username = dataAccess.getAuth(command.getAuthString()).getUsername();
             Game gameContainer = dataAccess.getGame(command.getGameId());
+            if (command.getColor() == ChessGame.TeamColor.BLACK && !Objects.equals(gameContainer.getBlackUsername(), username)){
+                throw new Exception();
+            }
+            if (command.getColor() == ChessGame.TeamColor.WHITE && !Objects.equals(gameContainer.getWhiteUsername(), username)){
+                throw new Exception();
+            }
             ChessGame game = gameContainer.getGame();
             LoadGame loadGameMessage = new LoadGame(game);
             connections.add(command.getGameId(), session);
@@ -79,16 +86,25 @@ public class WebSocketHandler {
     private void resignGame(Resign command, Session session) throws IOException {
         try {
             String userName = dataAccess.getAuth(command.getAuthString()).getUsername();
-            if (dataAccess.removePlayer(command.getGameId(),userName)) {
-                connections.remove(command.getGameId(), session);
-                String message;
-                message = String.format("%s resigned the game is over!", userName);
-                Game gameContainer = dataAccess.getGame(command.getGameId());
-                ChessGame game = gameContainer.getGame();
-                game.fished();
-                dataAccess.updateChessGame(command.getGameId(), game);
-                var notification = new Notification(message);
-                connections.broadcast(command.getGameId(), session, new Gson().toJson(notification));
+            Game gameContainer = dataAccess.getGame(command.getGameId());
+            ChessGame game = gameContainer.getGame();
+            if (!game.gameState()) {
+                if (Objects.equals(userName, gameContainer.getWhiteUsername()) || Objects.equals(userName, gameContainer.getBlackUsername())) {
+                    if (dataAccess.removePlayer(command.getGameId(), userName)) {
+                        String message;
+                        message = String.format("%s resigned the game is over!", userName);
+                        game.fished();
+                        dataAccess.updateChessGame(command.getGameId(), game);
+                        var notification = new Notification(message);
+                        connections.broadcast(command.getGameId(), null, new Gson().toJson(notification));
+                        connections.remove(command.getGameId(), session);
+                    }
+                } else {
+                    session.getRemote().sendString(new Gson().toJson(new Error("observers can not resign")));
+                }
+            }
+            else {
+                session.getRemote().sendString(new Gson().toJson(new Error("game has already ended")));
             }
         } catch (Exception e) {
             var message = "failed to disconnect";
@@ -104,7 +120,8 @@ public class WebSocketHandler {
             if (dataAccess.removePlayer(command.getGameId(),userName)) {
                 var message = String.format("%s left the game", userName);
                 var notification = new Notification(message);
-                connections.broadcast(command.getGameId(), session, new Gson().toJson(notification));
+                connections.broadcast(command.getGameId(), null, new Gson().toJson(notification));
+                connections.remove(command.getGameId(), session);
             }
         } catch (Exception e) {
             var message = "failed to disconnect";
@@ -119,10 +136,19 @@ public class WebSocketHandler {
             ChessMove move = command.getMove();
             Game gameContainer = dataAccess.getGame(command.getGameId());
             ChessGame game = gameContainer.getGame();
-            if (game.gameState()){
-                session.getRemote().sendString(new Gson().toJson(new Notification("game has ended")));
+            if (!Objects.equals(gameContainer.getWhiteUsername(), userName) && !Objects.equals(gameContainer.getBlackUsername(), userName)){
+                session.getRemote().sendString(new Gson().toJson(new Error("observers can not make moves")));
             }
-            else{
+            else if (game.gameState()){
+                session.getRemote().sendString(new Gson().toJson(new Error("game has ended")));
+            }
+            else if (game.getTeamTurn() == ChessGame.TeamColor.WHITE && !Objects.equals(userName, gameContainer.getWhiteUsername())){
+                session.getRemote().sendString(new Gson().toJson(new Error("not WHITE's turn")));
+            }
+            else if (game.getTeamTurn() == ChessGame.TeamColor.BLACK && !Objects.equals(userName, gameContainer.getBlackUsername())){
+                session.getRemote().sendString(new Gson().toJson(new Error("not BLACK's turn")));
+            }
+            else {
                 game.makeMove(move);
                 dataAccess.updateChessGame(command.getGameId(), game);
                 var message = String.format("%s made a move", userName);
