@@ -23,7 +23,6 @@ public class WebSocketHandler {
     private final ConnectionManager connections = new ConnectionManager();
 
     public WebSocketHandler(DataAccess data) throws DataAccessException {
-        System.out.println("create");
         this.dataAccess = data;
     }
 
@@ -64,7 +63,6 @@ public class WebSocketHandler {
             Game gameContainer = dataAccess.getGame(command.getGameId());
             ChessGame game = gameContainer.getGame();
             LoadGame loadGameMessage = new LoadGame(game);
-            System.out.println(new Gson().toJson(loadGameMessage));
             connections.add(command.getGameId(), session);
             String message;
             message = String.format("%s has joined the game as %s!", username, command.getColor().toString());
@@ -131,7 +129,7 @@ public class WebSocketHandler {
                 var loadGameMessage = new LoadGame(game);
                 var notification = new Notification(message);
                 connections.broadcast(command.getGameId(), session, new Gson().toJson(notification));
-                connections.broadcast(command.getGameId(), session, new Gson().toJson(loadGameMessage));
+                connections.broadcast(command.getGameId(), null, new Gson().toJson(loadGameMessage));
             }
         } catch (Exception e) {
             var message = "could not make move";

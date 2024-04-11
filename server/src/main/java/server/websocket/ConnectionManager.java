@@ -31,8 +31,8 @@ public class ConnectionManager {
         var cons = connections.get(gameId);
         for (var sesh : cons) {
             if (sesh.isOpen()) {
-                if (!sesh.equals(session)) {
-                    session.getRemote().sendString(notification);
+                if (sesh != session) {
+                    sesh.getRemote().sendString(notification);
                 }
             } else {
                 removeList.add(sesh);
