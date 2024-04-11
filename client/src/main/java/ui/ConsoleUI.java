@@ -133,6 +133,10 @@ public class ConsoleUI implements NotificationHandler {
             String confirm = scanner.next();
             if (Objects.equals(confirm, "Y")){
                 websocket.leaveGame(token, gameNumber);
+                game = null;
+                role = null;
+                boardside = null;
+                gameNumber = null;
                 return "left game";
             }
             else {
@@ -148,6 +152,10 @@ public class ConsoleUI implements NotificationHandler {
             String confirm = scanner.next();
             if (Objects.equals(confirm, "Y")){
                 websocket.resign(token, gameNumber);
+                game = null;
+                role = null;
+                boardside = null;
+                gameNumber = null;
                 return "left game";
             }
             else {
@@ -198,7 +206,7 @@ public class ConsoleUI implements NotificationHandler {
             if (list1.length != 2){
                 return "invalid start position";
             }
-            ChessPosition start = new ChessPosition(list1[0].charAt(0) - 'a', Integer.parseInt(list1[1]));
+            ChessPosition start = new ChessPosition(Integer.parseInt(list1[0]), list1[1].charAt(0) - 'a');
             ChessPiece peice = game.getBoard().getPiece(start);
             if (peice == null || peice.getTeamColor() != boardside){
                 return "no team peice";
@@ -210,7 +218,7 @@ public class ConsoleUI implements NotificationHandler {
                 return "invalid end position";
             }
             ChessPiece.PieceType promotion = null;
-            if (peice.getPieceType() == ChessPiece.PieceType.PAWN && list2[0].charAt(0) - 'a' == 8){
+            if (peice.getPieceType() == ChessPiece.PieceType.PAWN && Integer.parseInt(list2[1])  == 8){
                 System.out.print("promote to which piece?\nQ : queen\nK : kight\nB : bishop\nR : rook");
                 String pro = scanner.next();
                 promotion = proType(pro);
@@ -218,7 +226,7 @@ public class ConsoleUI implements NotificationHandler {
                     return "cannot promote to" + pro;
                 }
             }
-            ChessPosition end = new ChessPosition(list2[0].charAt(0) - 'a', Integer.parseInt(list2[1]));
+            ChessPosition end = new ChessPosition(Integer.parseInt(list2[0]), list2[1].charAt(0) - 'a');
             ChessMove move = new ChessMove(start, end, promotion);
             game.makeMove(move);
             websocket.makeMove(token, gameNumber, move);
@@ -272,12 +280,12 @@ public class ConsoleUI implements NotificationHandler {
     private String highlight(){
         System.out.print("enter piece position 'row col'");
         System.out.print("position: ");
-        String string = scanner.next();
+        String string = scanner.nextLine();
         var list = string.split(" ");
         if (list.length != 2){
             return "invalid start position";
         }
-        ChessPosition pos = new ChessPosition(list[0].charAt(0) - 'a', Integer.parseInt(list[1]));
+        ChessPosition pos = new ChessPosition(Integer.parseInt(list[0]), list[1].charAt(0) - 'a');
         printer.displayBoard(game, boardside, true, pos);
         return "highlighted board";
     }

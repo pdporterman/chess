@@ -22,26 +22,29 @@ public class PrintChess {
         ChessPiece[][] other = flip(board);
         out.print(ERASE_SCREEN);
 
-        drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, board);
+        drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, board, null);
         out.println(SET_BG_COLOR_BLACK);
-        drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other);
+        drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, null);
 
     }
 
     public void displayBoard(ChessGame game, ChessGame.TeamColor color, boolean highlight, ChessPosition pos){
 
         ChessPiece[][] grid = game.getBoard().getBoard();
+        ChessPiece[][] other = flip(grid);
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         int[][] highlights = null;
+        int[][] otherhighlights = null;
         if (highlight){
             highlights = highlightGrid(game,grid, pos);
-        }        if (color == ChessGame.TeamColor.BLACK){
-            ChessPiece[][] other = flip(grid);
-            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other);
+            otherhighlights = highlightGrid(game, other, pos);
+        }
+        if (color == ChessGame.TeamColor.WHITE){
+            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, highlights);
             out.print(CLEAR_BACKGROUND);
         }
         else{
-            drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, grid);
+            drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, grid, highlights);
             out.print(CLEAR_BACKGROUND);
         }
         out.print(ERASE_SCREEN);
@@ -52,7 +55,7 @@ public class PrintChess {
         var moves = game.validMoves(pos);
         for (int i = 0; i < grid.length; i++){
             for (int j = 0; j < grid[0].length; j++){
-                ChessPosition temp = new ChessPosition(i,j);
+                ChessPosition temp = new ChessPosition(i + 1,j);
                 for (var move : moves){
                     if (pos.equals(temp)){
                         highlights[i][j] = 2;
@@ -80,31 +83,45 @@ public class PrintChess {
         return rotatedArray;
     }
 
-    public static void drawBoard(PrintStream out, String[] headers, String[] margin, ChessPiece[][] board){
+    public static void drawBoard(PrintStream out, String[] headers, String[] margin, ChessPiece[][] board, int[][] highlights){
         drawHeaders(out, headers);
-        drawRows(out, margin, board);
+        drawRows(out, margin, board, highlights);
         drawHeaders(out, headers);
     }
 
-    private static void drawRows(PrintStream out, String[] margin, ChessPiece[][] board) {
+    private static void drawRows(PrintStream out, String[] margin, ChessPiece[][] board, int[][] highlights) {
         for (int row = 0; row <= board.length - 1; row++){
-            printCheckerText(out, row, margin, board[row]);
+            if (highlights == null){
+                printCheckerText(out, row, margin, board[row], null);
+            }
+            else{
+                printCheckerText(out, row, margin, board[row], highlights[row]);
+            }
         }
     }
 
-    private static void printCheckerText(PrintStream out, int rowNum, String[] margin, ChessPiece[] row) {
+    private static void printCheckerText(PrintStream out, int rowNum, String[] margin, ChessPiece[] row, int[] highlights) {
         out.print(SET_TEXT_COLOR_WHITE);
         out.print(" ");
         out.print(margin[rowNum]);
         out.print(" ");
         for (int i = 0; i < BOARD_SIZE_IN_SQUARES; i++){
-            if ((rowNum + i) % 2 == 0){
+            if (highlights != null && highlights[i] == 1){
                 out.print(RESET_BG_COLOR);
-                out.print(SET_BG_COLOR_WHITE);
+                out.print(SET_BG_COLOR_GREEN);
             }
-            else{
+            else if (highlights != null && highlights[i] == 2){
                 out.print(RESET_BG_COLOR);
-                out.print(SET_BG_COLOR_BLACK);
+                out.print(SET_BG_COLOR_YELLOW);
+            }
+            else {
+                if ((rowNum + i) % 2 == 0) {
+                    out.print(RESET_BG_COLOR);
+                    out.print(SET_BG_COLOR_WHITE);
+                } else {
+                    out.print(RESET_BG_COLOR);
+                    out.print(SET_BG_COLOR_BLACK);
+                }
             }
             out.print(" ");
             out.print(piece(row[i]));
