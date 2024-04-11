@@ -21,14 +21,6 @@ public class Game {
         this.game = game;
     }
 
-//    public Game(Integer id){
-//        this.gameID = id;
-//    }
-
-//    public Game(String name){
-//        this.gameName = name;
-//    }
-
     public void setBlackUsername(String blackUsername) {
         this.blackUsername = blackUsername;
     }
