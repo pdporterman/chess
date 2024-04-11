@@ -34,20 +34,53 @@ public class PrintChess {
         ChessPiece[][] other = flip(grid);
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         int[][] highlights = null;
-        int[][] otherhighlights = null;
+        int[][] flipXhighlights = null;
+        int[][] flipYhighlights = null;
         if (highlight){
             highlights = highlightGrid(game,grid, pos);
-            otherhighlights = highlightGrid(game, other, pos);
+            flipXhighlights = mirrorGridX(highlights);
+            flipYhighlights = mirrorGridY(highlights);
         }
         if (color == ChessGame.TeamColor.WHITE){
-            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, highlights);
+            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, flipXhighlights);
             out.print(CLEAR_BACKGROUND);
+            // flip rows
         }
         else{
-            drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, grid, highlights);
+            drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, grid, flipYhighlights);
             out.print(CLEAR_BACKGROUND);
+            //flip cols
         }
         out.print(ERASE_SCREEN);
+    }
+
+    public static int[][] mirrorGridX(int[][] grid) {
+        int numRows = grid.length;
+        int numCols = grid[0].length;
+        int[][] mirroredGrid = new int[numRows][numCols];
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                mirroredGrid[i][j] = grid[numRows - 1 - i][j];
+            }
+        }
+
+        return mirroredGrid;
+    }
+
+
+    public static int[][] mirrorGridY(int[][] grid) {
+        int numRows = grid.length;
+        int numCols = grid[0].length;
+        int[][] mirroredGrid = new int[numRows][numCols];
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                mirroredGrid[i][j] = grid[i][numCols - 1 - j];
+            }
+        }
+
+        return mirroredGrid;
     }
 
     private int[][] highlightGrid(ChessGame game, ChessPiece[][] grid, ChessPosition pos) {
@@ -55,7 +88,7 @@ public class PrintChess {
         var moves = game.validMoves(pos);
         for (int i = 0; i < grid.length; i++){
             for (int j = 0; j < grid[0].length; j++){
-                ChessPosition temp = new ChessPosition(i + 1,j);
+                ChessPosition temp = new ChessPosition(i+1,j+1);
                 for (var move : moves){
                     if (pos.equals(temp)){
                         highlights[i][j] = 2;
