@@ -42,12 +42,12 @@ public class PrintChess {
             flipYhighlights = mirrorGridY(highlights);
         }
         if (color == ChessGame.TeamColor.WHITE){
-            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, flipXhighlights);
+            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, highlights);
             out.print(CLEAR_BACKGROUND);
             // flip rows
         }
         else{
-            drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, grid, flipYhighlights);
+            drawBoard(out, new String[]{"H", "G", "F", "E", "D", "C", "B", "A"}, new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}, grid, highlights);
             out.print(CLEAR_BACKGROUND);
             //flip cols
         }
@@ -138,7 +138,7 @@ public class PrintChess {
         out.print(" ");
         out.print(margin[rowNum]);
         out.print(" ");
-        for (int i = 0; i < BOARD_SIZE_IN_SQUARES; i++){
+        for (int i = 7; i >= 0; i--){
             if (highlights != null && highlights[i] == 1){
                 out.print(RESET_BG_COLOR);
                 out.print(SET_BG_COLOR_GREEN);
@@ -148,7 +148,7 @@ public class PrintChess {
                 out.print(SET_BG_COLOR_YELLOW);
             }
             else {
-                if ((rowNum + i) % 2 == 0) {
+                if ((rowNum + i) % 2 != 0) {
                     out.print(RESET_BG_COLOR);
                     out.print(SET_BG_COLOR_WHITE);
                 } else {

@@ -181,6 +181,7 @@ public class ChessGame {
                 }
             }
         }
+        fished();
         return true;
     }
 

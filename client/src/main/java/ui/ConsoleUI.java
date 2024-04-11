@@ -202,7 +202,7 @@ public class ConsoleUI implements NotificationHandler {
             System.out.print("enter position 'row col'");
             System.out.print("start position: ");
             String startString = scanner.next();
-            var list1 = startString.split(" ");
+            var list1 = startString.split("");
             if (list1.length != 2){
                 return "invalid start position";
             }
@@ -213,12 +213,12 @@ public class ConsoleUI implements NotificationHandler {
             }
             System.out.print("end position: ");
             String endString = scanner.next();
-            var list2 = endString.split(" ");
+            var list2 = endString.split("");
             if (list2.length != 2){
                 return "invalid end position";
             }
             ChessPiece.PieceType promotion = null;
-            if (peice.getPieceType() == ChessPiece.PieceType.PAWN && (boardside == ChessGame.TeamColor.WHITE && Integer.parseInt(list2[1])  == 8) || (boardside == ChessGame.TeamColor.BLACK && Integer.parseInt(list2[1])  == 1)){
+            if (peice.getPieceType() == ChessPiece.PieceType.PAWN && (boardside == ChessGame.TeamColor.WHITE && Integer.parseInt(list2[0])  == 8) || (boardside == ChessGame.TeamColor.BLACK && Integer.parseInt(list2[0])  == 1)){
                 System.out.print("promote to which piece?\nQ : queen\nK : kight\nB : bishop\nR : rook");
                 String pro = scanner.next();
                 promotion = proType(pro);
@@ -280,8 +280,8 @@ public class ConsoleUI implements NotificationHandler {
     private String highlight(){
         System.out.print("enter piece position 'row col'");
         System.out.print("position: ");
-        String string = scanner.nextLine();
-        var list = string.split(" ");
+        String string = scanner.next();
+        var list = string.split("");
         if (list.length != 2){
             return "invalid position";
         }
