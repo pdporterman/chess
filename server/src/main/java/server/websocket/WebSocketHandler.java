@@ -152,19 +152,23 @@ public class WebSocketHandler {
                 var winner = (game.getTeamTurn() == ChessGame.TeamColor.WHITE) ? "White" : "Black";
                 game.makeMove(move);
                 dataAccess.updateChessGame(command.getGameId(), game);
-                if (game.isInCheck(game.getTeamTurn())){
-                    var check = new Notification(String.format("%s has won! the game is over ", userName));
-                    connections.broadcast(command.getGameId(), null, new Gson().toJson(check));
-                }
-                if (game.isInStalemate(game.getTeamTurn())){
-                    var check = new Notification("the game has reached a stailmate and is over");
-                    connections.broadcast(command.getGameId(), null, new Gson().toJson(check));
-                }
                 var message = String.format("%s made a move", userName);
                 var loadGameMessage = new LoadGame(game);
                 var notification = new Notification(message);
                 connections.broadcast(command.getGameId(), session, new Gson().toJson(notification));
                 connections.broadcast(command.getGameId(), null, new Gson().toJson(loadGameMessage));
+                if (game.isInCheckmate(game.getTeamTurn())){
+                    var check = new Notification(String.format("CHECKMATE %s has won! the game is over ", userName));
+                    connections.broadcast(command.getGameId(), null, new Gson().toJson(check));
+                }
+                else if(game.isInCheck(game.getTeamTurn())){
+                    var check = new Notification(game.getTeamTurn().toString() + " is in check");
+                    connections.broadcast(command.getGameId(), null, new Gson().toJson(check));
+                }
+                else if (game.isInStalemate(game.getTeamTurn())){
+                    var check = new Notification("the game has reached a stalemate and is over");
+                    connections.broadcast(command.getGameId(), null, new Gson().toJson(check));
+                }
             }
         } catch (Exception e) {
             var message = "could not make move";

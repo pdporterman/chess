@@ -27,7 +27,7 @@ public class MemoryDataAccess implements DataAccess {
 
     public User getUser(String username, String password){
         for (User pastUser : users){
-            if (Objects.equals(username, pastUser.getUserName()) && Objects.equals(password, pastUser.getPassword())){
+            if (Objects.equals(username, pastUser.getUserName())){
                 return pastUser;
             }
         }

@@ -36,13 +36,15 @@ public class PrintChess {
         int[][] highlights = null;
         int[][] flipXhighlights = null;
         int[][] flipYhighlights = null;
+        int[][] mirror = null;
         if (highlight){
             highlights = highlightGrid(game,grid, pos);
             flipXhighlights = mirrorGridX(highlights);
             flipYhighlights = mirrorGridY(highlights);
+            mirror = mirrorGridY(flipXhighlights);
         }
         if (color == ChessGame.TeamColor.WHITE){
-            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, highlights);
+            drawBoard(out, new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}, new String[]{"8", "7", "6", "5", "4", "3", "2", "1"}, other, mirror);
             out.print(CLEAR_BACKGROUND);
             // flip rows
         }

@@ -199,37 +199,42 @@ public class ConsoleUI implements NotificationHandler {
 
     public String makeMove(){
         try {
-            System.out.print("enter position 'row col'");
-            System.out.print("start position: ");
-            String startString = scanner.next();
-            var list1 = startString.split("");
-            if (list1.length != 2){
-                return "invalid start position";
-            }
-            ChessPosition start = new ChessPosition(Integer.parseInt(list1[0]), list1[1].charAt(0) - 'a' + 1);
-            ChessPiece peice = game.getBoard().getPiece(start);
-            if (peice == null || peice.getTeamColor() != boardside){
-                return "no team peice";
-            }
-            System.out.print("end position: ");
-            String endString = scanner.next();
-            var list2 = endString.split("");
-            if (list2.length != 2){
-                return "invalid end position";
-            }
-            ChessPiece.PieceType promotion = null;
-            if (peice.getPieceType() == ChessPiece.PieceType.PAWN && (boardside == ChessGame.TeamColor.WHITE && Integer.parseInt(list2[0])  == 8) || (boardside == ChessGame.TeamColor.BLACK && Integer.parseInt(list2[0])  == 1)){
-                System.out.print("promote to which piece?\nQ : queen\nK : kight\nB : bishop\nR : rook");
-                String pro = scanner.next();
-                promotion = proType(pro);
-                if (promotion == null){
-                    return "cannot promote to" + pro;
+            if (Objects.equals(role, "player")) {
+                System.out.print("enter position 'row col'");
+                System.out.print("start position: ");
+                String startString = scanner.next();
+                var list1 = startString.split("");
+                if (list1.length != 2) {
+                    return "invalid start position";
                 }
+                ChessPosition start = new ChessPosition(Integer.parseInt(list1[1]), list1[0].charAt(0) - 'a' + 1);
+                ChessPiece peice = game.getBoard().getPiece(start);
+                if (peice == null || peice.getTeamColor() != boardside) {
+                    return "no team peice";
+                }
+                System.out.print("end position: ");
+                String endString = scanner.next();
+                var list2 = endString.split("");
+                if (list2.length != 2) {
+                    return "invalid end position";
+                }
+                ChessPiece.PieceType promotion = null;
+                if (peice.getPieceType() == ChessPiece.PieceType.PAWN && (boardside == ChessGame.TeamColor.WHITE && Integer.parseInt(list2[1]) == 8) || (boardside == ChessGame.TeamColor.BLACK && Integer.parseInt(list2[1]) == 1)) {
+                    System.out.print("promote to which piece?\nQ : queen\nK : kight\nB : bishop\nR : rook");
+                    String pro = scanner.next();
+                    promotion = proType(pro);
+                    if (promotion == null) {
+                        return "cannot promote to" + pro;
+                    }
+                }
+                ChessPosition end = new ChessPosition(Integer.parseInt(list2[1]), list2[0].charAt(0) - 'a' + 1);
+                ChessMove move = new ChessMove(start, end, promotion);
+                game.makeMove(move);
+                websocket.makeMove(token, gameNumber, move);
             }
-            ChessPosition end = new ChessPosition(Integer.parseInt(list2[0]), list2[1].charAt(0) - 'a' + 1);
-            ChessMove move = new ChessMove(start, end, promotion);
-            game.makeMove(move);
-            websocket.makeMove(token, gameNumber, move);
+            else {
+                return "observers can not make moves";
+            }
             return "move successful";
         } catch (NumberFormatException e) {
             return "could not use position";
@@ -285,7 +290,7 @@ public class ConsoleUI implements NotificationHandler {
         if (list.length != 2){
             return "invalid position";
         }
-        ChessPosition pos = new ChessPosition(Integer.parseInt(list[0]), list[1].charAt(0) - 'a' + 1);
+        ChessPosition pos = new ChessPosition(Integer.parseInt(list[1]), list[0].charAt(0) - 'a' + 1);
         printer.displayBoard(game, boardside, true, pos);
         return "highlighted board";
     }
